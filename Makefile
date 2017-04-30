@@ -9,6 +9,12 @@ clean-pyc: ## Remove Python file artifacts.
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 
+start: ## Starts the development server.
+	python ./tests/testapp/manage.py runserver
+
+test: ## Test the project.
+	python ./runtests.py
+
 dist: ## Compile the JS and CSS for release.
 	npm run dist
 

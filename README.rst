@@ -28,7 +28,17 @@ Development
 Installation
 ~~~~~~~~~~~~
 
-TODO
+Requirements: ``virtualenv``, ``pyenv``, ``twine``
+
+.. code:: sh
+
+    git clone git@github.com:springload/wagtailmodelchoosers.git
+    cd wagtailmodelchoosers/
+    virtualenv .venv
+    source ./.venv/bin/activate
+    pip install -e .[testing,docs] -U
+    nvm install
+    npm install
 
 Commands
 ~~~~~~~~
