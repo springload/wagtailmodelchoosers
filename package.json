@@ -52,7 +52,10 @@
   "dependencies": {
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "react-autosuggest": "^3.7.4"
+    "prop-types": "^15.5.8",
+    "react-autosuggest": "^3.7.4",
+    "draft-js": "^0.10.0",
+    "draftail": "^0.6.0"
   },
   "devDependencies": {
     "babel-core": "^6.22.1",
