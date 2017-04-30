@@ -11,23 +11,23 @@ import ModelSource from './sources/ModelSource';
 import RemoteModelSource from './sources/RemoteModelSource';
 
 const initModelChooser = (id, data) => {
-    const input = document.getElementById(id);
+  const input = document.getElementById(id);
 
-    if (input) {
-        const item = input.parentNode;
-        const control = item.querySelector('[data-model-chooser-mount]');
-        ReactDOM.render(<ModelChooser input={input} options={data} />, control);
-    }
+  if (input) {
+    const item = input.parentNode;
+    const control = item.querySelector('[data-model-chooser-mount]');
+    ReactDOM.render(<ModelChooser input={input} options={data} />, control);
+  }
 };
 
 const initRemoteModelChooser = (id, data) => {
-    const input = document.getElementById(id);
+  const input = document.getElementById(id);
 
-    if (input) {
-        const item = input.parentNode;
-        const control = item.querySelector('[data-remote-model-chooser-mount]');
-        ReactDOM.render(<RemoteModelChooser input={input} options={data} />, control);
-    }
+  if (input) {
+    const item = input.parentNode;
+    const control = item.querySelector('[data-remote-model-chooser-mount]');
+    ReactDOM.render(<RemoteModelChooser input={input} options={data} />, control);
+  }
 };
 
 window.wagtailModelChoosers = {};
