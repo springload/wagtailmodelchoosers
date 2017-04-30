@@ -1,0 +1,6 @@
+{% load html_attributes %}
+
+<div class="{% block field_class %}model-chooser{% endblock %}">
+    <input type="hidden" value="{{ value }}" name="{{ name }}" {{ attrs|html_attributes:'placeholder,' }}>
+    <div {% block react_mount_name %}data-model-chooser-mount{% endblock %}></div>
+</div>

@@ -1,0 +1,44 @@
+# System & Caches
+.DS_Store
+*.pyc
+*.pyo
+*.sass-cache
+
+# Build files
+build/
+/docs/_build/
+
+# Application
+var
+static
+
+# Python Package
+dist/
+/*.egg-info/
+develop-eggs
+src/*.egg-info
+eggs
+/MANIFEST
+
+# Development & IDEs
+.idea
+/.venv/
+
+# Tests
+/.tox/
+.coverage
+coverage
+coverage_html_report/
+
+# Dependenciess
+node_modules/
+bower_components/
+npm-debug.log*
+$virtualenv.tar.gz
+
+# Misc
+*.sql
+*sqlite3
+*.log
+*.pot
+bin

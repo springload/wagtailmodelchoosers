@@ -1,0 +1,83 @@
+{
+  "name": "wagtailmodelchoosers",
+  "version": "0.1.0",
+  "description": "Allows you to pick generic models (rather than snippets or pages)",
+  "main": "setup.py",
+  "keywords": [],
+  "author": "Springload",
+  "license": "MIT",
+  "homepage": "https://github.com/springload/wagtailmodelchoosers#readme",
+  "bugs": {
+    "url": "https://github.com/springload/wagtailmodelchoosers/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springload/wagtailmodelchoosers.git"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "> 1%",
+              "IE 11"
+            ]
+          }
+        }
+      ],
+      "react"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "airbnb",
+    "rules": {
+      "arrow-body-style": [
+        "off"
+      ],
+      "react/jsx-filename-extension": [
+        "error",
+        {
+          "extensions": [
+            ".js"
+          ]
+        }
+      ]
+    },
+    "env": {
+      "browser": true
+    }
+  },
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-autosuggest": "^3.7.4"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-jest": "^19.0.0",
+    "babel-loader": "^6.2.10",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-react": "^6.22.0",
+    "css-loader": "^0.26.1",
+    "enzyme": "^2.8.2",
+    "enzyme-to-json": "^1.5.1",
+    "eslint": "^3.19.0",
+    "eslint-config-springload": "1.0.2",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-jsx-a11y": "3.0.2",
+    "eslint-plugin-react": "6.10.3",
+    "extract-text-webpack-plugin": "^2.0.0",
+    "jest": "^19.0.2",
+    "nightmare": "^2.10.0",
+    "react-test-renderer": "^15.5.4",
+    "webpack": "^2.2.1"
+  },
+  "scripts": {
+    "start": "webpack --config wagtailmodelchoosers/client/webpack.config.dev.js --watch",
+    "dist": "webpack --config wagtailmodelchoosers/client/webpack.config.prod.js",
+    "lint": "eslint wagtailmodelchoosers/client"
+}
+}
