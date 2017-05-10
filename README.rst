@@ -7,6 +7,9 @@ wagtailmodelchoosers
 
 Check out `Awesome Wagtail <https://github.com/springload/awesome-wagtail>`_ for more awesome packages and resources from the Wagtail community.
 
+.. image:: https://cdn.rawgit.com/springload/wagtailmodelchoosers/b7b6202/.github/wagtailmodelchoosers-screenshot.png
+   :width: 728 px
+
 Installation
 ------------
 
