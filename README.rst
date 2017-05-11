@@ -19,6 +19,7 @@ Usage
 -----
 
 ``ModelChooserBlock`` takes the name of the chooser configuration as first positional argument. Use other block kwargs (e.g. `required`) as usual.
+
 .. code:: python
 
     from wagtail.wagtailcore import blocks
@@ -28,6 +29,7 @@ Usage
         custom_model = ModelChooserBlock('custom_model')  # `chooser` can be a positional argument, the keyword is used here for clarity.
        
 ``ModelChooserPanel`` takes the name of the field as first positional argument (like a regular Panel) and the name of the chooser configuration as second positional argument. Use other panel kwargs as usual.
+
 .. code:: python
 
     from django.db import models
@@ -52,6 +54,7 @@ Configuration
 It looks for a ``MODEL_CHOOSERS_OPTIONS`` dictionary in the settings where the key is the name of the chooser and the value, a dictionary of options.
 
 The ModelChooser and RemoteModelChooser share a similar base configuration and only have a few specific fields.
+
 .. code:: python
 
     MODEL_CHOOSERS_OPTIONS = {
