@@ -16,19 +16,16 @@ class RemoteModelChooser extends React.Component {
     if (item === null) {
       // Null state
       newValue = null;
+    } else if (fieldsToSave) {
+      // Create a new object with only the fields to save
+      const clone = {};
+      fieldsToSave.forEach((field) => {
+        clone[field] = item[field];
+      });
+      newValue = JSON.stringify(clone);
     } else {
-      // Object
-      if (fieldsToSave) {
-        // Create a new object with only the fields to save
-        const clone = {};
-        fieldsToSave.forEach((field) => {
-          clone[field] = item[field];
-        });
-        newValue = JSON.stringify(clone);
-      } else {
-        // Use the whole object.
-        newValue = JSON.stringify(item);
-      }
+      // Use the whole object.
+      newValue = JSON.stringify(item);
     }
 
     // TODO: Props mutation WTF?
@@ -56,7 +53,9 @@ class RemoteModelChooser extends React.Component {
 }
 
 RemoteModelChooser.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   options: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   input: PropTypes.object.isRequired,
 };
 
