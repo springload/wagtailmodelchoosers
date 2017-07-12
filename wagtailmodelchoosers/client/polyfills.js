@@ -8,13 +8,14 @@ if (typeof Promise === 'undefined') {
     // inconsistent state due to an error, but it gets swallowed by a Promise,
     // and the user has no idea what causes React's erratic future behavior.
     /* eslint-disable global-require */
-    require('promise/lib/rejection-tracking').enable();
-    window.Promise = require('promise/lib/es6-extensions.js');
+  require('promise/lib/rejection-tracking').enable();
+  window.Promise = require('promise/lib/es6-extensions.js');
     /* eslint-enable */
 }
 
 // fetch() polyfill for making API calls.
-// Uncomment this line to use fetch in your code. It is left out by default, because the polyfill is big.
+// Uncomment this line to use fetch in your code.
+// It is left out by default, because the polyfill is big.
 require('whatwg-fetch');
 
 /* eslint-disable */

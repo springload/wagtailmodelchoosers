@@ -30,24 +30,6 @@ class AutoComplete extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  loadSuggestions(suggestionValue) {
-    const { filter, endpoint, onLoadSuggestions } = this.props;
-    const url = `${endpoint}/?search=${suggestionValue}${filter}`;
-
-    fetch(url, {
-      credentials: 'same-origin',
-    })
-      .then(res => res.json())
-      .then(json => {
-        this.setState({
-          suggestions: json.results,
-          loading: false,
-        }, () => {
-          onLoadSuggestions(json.results);
-        });
-      });
-  }
-
   onSuggestionsUpdateRequested({ value }) {
     const { onLoadStart } = this.props;
     onLoadStart();
@@ -64,6 +46,24 @@ class AutoComplete extends Component {
     });
   }
 
+  loadSuggestions(suggestionValue) {
+    const { filter, endpoint, onLoadSuggestions } = this.props;
+    const url = `${endpoint}/?search=${suggestionValue}${filter}`;
+
+    fetch(url, {
+      credentials: 'same-origin',
+    })
+      .then(res => res.json())
+      .then((json) => {
+        this.setState({
+          suggestions: json.results,
+          loading: false,
+        }, () => {
+          onLoadSuggestions(json.results);
+        });
+      });
+  }
+
   render() {
     const { value, suggestions } = this.state;
 
@@ -76,7 +76,7 @@ class AutoComplete extends Component {
           renderSuggestion={renderSuggestion}
           inputProps={{
             placeholder: 'Type to search',
-            value: value,
+            value,
             onChange: this.onChange,
           }}
         />
