@@ -17,10 +17,14 @@ def wagtailmodelchoosers_admin_css():
 
 @hooks.register('insert_editor_js')
 def wagtailmodelchoosers_admin_js():
-    return format_html(
+    js_html = format_html(
         '<script src="{}"></script>',
         static('wagtailmodelchoosers/wagtailmodelchoosers.js')
+    ) + format_html(
+        '<script src="{}"></script>',
+        static('wagtailmodelchoosers/polyfills.js')
     )
+    return js_html
 
 
 @hooks.register('register_admin_urls')

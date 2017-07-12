@@ -7,6 +7,7 @@ const outputPath = path.join(__dirname, '..', 'static', 'wagtailmodelchoosers');
 module.exports = {
   entry: {
     wagtailmodelchoosers: './wagtailmodelchoosers/client/wagtailmodelchoosers.js',
+    polyfills: './wagtailmodelchoosers/client/polyfills.js',
   },
   output: {
     path: outputPath,
