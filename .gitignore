@@ -42,3 +42,5 @@ $virtualenv.tar.gz
 *.log
 *.pot
 bin
+
+.vscode/
