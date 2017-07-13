@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 
 from wagtail.wagtailcore import hooks
 
@@ -17,14 +17,16 @@ def wagtailmodelchoosers_admin_css():
 
 @hooks.register('insert_editor_js')
 def wagtailmodelchoosers_admin_js():
-    js_html = format_html(
-        '<script src="{}"></script>',
-        static('wagtailmodelchoosers/wagtailmodelchoosers.js')
-    ) + format_html(
-        '<script src="{}"></script>',
-        static('wagtailmodelchoosers/polyfills.js')
+    js_files = (
+        'wagtailmodelchoosers/wagtailmodelchoosers.js',
+        'wagtailmodelchoosers/polyfills.js',
     )
-    return js_html
+    js_includes = format_html_join(
+        '\n',
+        '<script src="{}"></script>',
+        ((static(filename),) for filename in js_files)
+    )
+    return js_includes
 
 
 @hooks.register('register_admin_urls')
