@@ -19,9 +19,7 @@ const STR = {
 };
 
 const defaultProps = {
-  display: 'title',
   filters: [],
-  pk_name: 'uuid',
   page_size: 10,
   page_size_param: 'page_size',
   translations: {},
@@ -32,9 +30,6 @@ const propTypes = {
   onClose: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   endpoint: PropTypes.string.isRequired,
-  value: PropTypes.any,
-  required: PropTypes.bool.isRequired,
-  display: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
   list_display: PropTypes.array.isRequired,
   filters: PropTypes.array,
   pk_name: PropTypes.string.isRequired,
@@ -90,11 +85,6 @@ class ModelPicker extends React.Component {
     this.onLoadStart = this.onLoadStart.bind(this);
   }
 
-  getDefaultUrl() {
-    const { endpoint, page_size: pageSize, page_size_param: pageSizeParam } = this.props;
-    return `${endpoint}/?${pageSizeParam}=${pageSize}`;
-  }
-
   componentDidMount() {
     setTimeout(() => {
       this.navigate(this.getDefaultUrl());
@@ -109,91 +99,6 @@ class ModelPicker extends React.Component {
     document.body.style.width = '';
   }
 
-  getPk(item) {
-    const { pk_name } = this.props;
-
-    return !!item ? item[pk_name] : null;
-  }
-
-  getModels() {
-    const { shouldShowSuggestions, suggestions, models } = this.state;
-
-    return shouldShowSuggestions ? suggestions : models;
-  }
-
-  select(pk) {
-    const { onSelect } = this.props;
-    const { url } = this.state;
-    const models = this.getModels();
-    const item = models.find(m => this.getPk(m) === pk);
-
-    this.closeWithCallback(() => {
-      onSelect(this.getPk(item), item, url);
-    });
-  }
-
-  closeWithCallback(callback) {
-    this.elRef.classList.add(MODAL_EXIT_CLASS);
-    setTimeout(callback, MODAL_CLOSE_TIMEOUT);
-  }
-
-  update(json) {
-    const { page_size: pageSize } = this.props;
-
-    // If the API does not return the total number of page,
-    // try to calculate it from the number of result and the page size.
-    let numPage = 0;
-    if (json.num_pages) {
-      numPage = json.num_pages;
-    } else if (json.count) {
-      numPage = Math.ceil(json.count / pageSize);
-    }
-
-    this.setState({
-      numPages: numPage,
-      page: json.page,
-      models: json.results,
-      count: json.count,
-      next: json.next,
-      previous: json.previous,
-      loading: false,
-    }, () => {
-      this.contentRef.scrollTop = 0;
-    });
-  }
-
-  addFilterParams(url) {
-    const { filters } = this.props;
-    let localUrl = url;
-
-    if (filters) {
-      // TODO Redo with map and join.
-      filters.forEach((filter) => {
-        localUrl += `&${filter.field}=${filter.value}`;
-      });
-    }
-
-    return localUrl;
-  }
-
-  navigate(url) {
-    const urlWithFilters = this.addFilterParams(url);
-    this.setState({
-      loading: true,
-      url: url,
-    }, () => {
-      // TODO There is no reason for this code to be in the setState callback.
-      // TODO This is not producing errors when status code is not 200,
-      // so the error handling likely does not work.
-      // TODO Use fetch API wrapper.
-      fetch(urlWithFilters, {
-        credentials: 'same-origin',
-      })
-        .then(res => res.json())
-        .then(this.update, this.handleError);
-    });
-  }
-
   onClose(e) {
     const { onClose } = this.props;
     this.closeWithCallback(() => {
@@ -201,130 +106,26 @@ class ModelPicker extends React.Component {
     });
   }
 
-  handleError() {
+  onLoadSuggestions(suggestions) {
     this.setState({
-      loading: false,
+      suggestions,
+      suggestionsCount: suggestions.length,
+      loadingSuggestions: false,
     });
   }
 
-  getPlaceholder() {
-    const { list_display: listDisplay } = this.props;
-    const { loading } = this.state;
+  onValueChange(newValue) {
+    const shouldShowSuggestions = newValue.trim().length > 2;
 
-    return (
-      <tr className="chooser__item">
-        <td colSpan={listDisplay.length} className="chooser__cell chooser__cell--disabled">
-          {loading ? 'Loading' : 'Sorry, no results'}
-        </td>
-      </tr>
-    );
+    this.setState({
+      shouldShowSuggestions,
+    });
   }
 
-  getTable() {
-    const { list_display: listDisplay } = this.props;
-    const models = this.getModels();
-
-    return (
-      <table className="chooser-table">
-        <thead>
-        <tr>
-          {listDisplay.map(this.getHeader)}
-        </tr>
-        </thead>
-        <tbody>
-        {models.length ? models.map(this.getRow) : this.getPlaceholder()}
-        </tbody>
-      </table>
-    );
-  }
-
-  getHeader(field) {
-    return (
-      <td key={field.name}>
-        {field.label}
-      </td>
-    );
-  }
-
-  parseValue(value, fieldName) {
-    const type = typeof value;
-
-    if (type === 'string') {
-      return value;
-    }
-
-    if (type === 'number') {
-      return value;
-    }
-
-    if (type === 'object') {
-      // Django internals
-      if (fieldName === 'content_type') {
-        return value.model;
-      }
-    }
-
-    if (type === 'boolean') {
-      return value ? 'True' : 'False';
-    }
-
-    return '';
-  }
-
-  getRow(item) {
-    const { list_display: listDisplay } = this.props;
-
-    return (
-      <tr
-        key={this.getPk(item)}
-        className="chooser__item"
-        onClick={() => this.select(this.getPk(item))}
-      >
-        {listDisplay.map(field => {
-          const value = item[field.name];
-
-          return (
-            <td key={field.name} className="chooser__cell">
-              {this.parseValue(value, field.name)}
-            </td>
-          );
-        })}
-      </tr>
-    );
-  }
-
-  getCount() {
-    const { count, shouldShowSuggestions, suggestionsCount } = this.state;
-
-    return shouldShowSuggestions ? suggestionsCount : count;
-  }
-
-  getCountDisplay() {
-    const { translations } = this.props;
-    const count = this.getCount();
-    const label = pluralize(STR, translations, 'result', 'results', count);
-
-    return (
-      <span className="admin-modal__results">
-        {count} {label}
-      </span>
-    );
-  }
-
-  getPageDisplay() {
-    const { translations } = this.props;
-    const { numPages, page: currentPage, shouldShowSuggestions } = this.state;
-
-    let text;
-    if (shouldShowSuggestions) {
-      const label = tr(STR, translations, 'page');
-      text = `1 / 1 ${label}`;
-    } else {
-      const label = pluralize(STR, translations, 'result', 'results', numPages);
-      text = `${currentPage} / ${numPages} ${label}`;
-    }
-
-    return <span className="admin-modal__pagination">{text}</span>;
+  onLoadStart() {
+    this.setState({
+      loadingSuggestions: true,
+    });
   }
 
   getPaginationButtons() {
@@ -352,15 +153,128 @@ class ModelPicker extends React.Component {
     );
   }
 
-  navigatePrevious() {
-    const { shouldShowSuggestions, page } = this.state;
+  getPageDisplay() {
+    const { translations } = this.props;
+    const { numPages, page: currentPage, shouldShowSuggestions } = this.state;
 
+    let text;
     if (shouldShowSuggestions) {
-      return;
+      const label = tr(STR, translations, 'page');
+      text = `1 / 1 ${label}`;
+    } else {
+      const label = pluralize(STR, translations, 'result', 'results', numPages);
+      text = `${currentPage} / ${numPages} ${label}`;
     }
 
-    const url = `${this.getDefaultUrl()}&page=${page - 1}`;
-    this.navigate(url);
+    return <span className="admin-modal__pagination">{text}</span>;
+  }
+
+  getCountDisplay() {
+    const { translations } = this.props;
+    const count = this.getCount();
+    const label = pluralize(STR, translations, 'result', 'results', count);
+
+    return (
+      <span className="admin-modal__results">
+        {count} {label}
+      </span>
+    );
+  }
+
+  getRow(item) {
+    const { list_display: listDisplay } = this.props;
+
+    return ( // eslint-disable-next-line
+      <tr
+        key={this.getPk(item)}
+        className="chooser__item"
+        onClick={() => this.select(this.getPk(item))}
+      >
+        {listDisplay.map((field) => {
+          const value = item[field.name];
+
+          return (
+            <td key={field.name} className="chooser__cell">
+              {this.parseValue(value, field.name)}
+            </td>
+          );
+        })}
+      </tr>
+    );
+  }
+
+  getCount() {
+    const { count, shouldShowSuggestions, suggestionsCount } = this.state;
+
+    return shouldShowSuggestions ? suggestionsCount : count;
+  }
+
+  // eslint-disable-next-line
+  getHeader(field) {
+    return (
+      <td key={field.name}>
+        {field.label}
+      </td>
+    );
+  }
+
+  getTable() {
+    const { list_display: listDisplay } = this.props;
+    const models = this.getModels();
+
+    return (
+      <table className="chooser-table">
+        <thead>
+          <tr>
+            {listDisplay.map(this.getHeader)}
+          </tr>
+        </thead>
+        <tbody>
+          {models.length ? models.map(this.getRow) : this.getPlaceholder()}
+        </tbody>
+      </table>
+    );
+  }
+
+  getPlaceholder() {
+    const { list_display: listDisplay } = this.props;
+    const { loading } = this.state;
+
+    return (
+      <tr className="chooser__item">
+        <td colSpan={listDisplay.length} className="chooser__cell chooser__cell--disabled">
+          {loading ? 'Loading' : 'Sorry, no results'}
+        </td>
+      </tr>
+    );
+  }
+
+  getModels() {
+    const { shouldShowSuggestions, suggestions, models } = this.state;
+
+    return shouldShowSuggestions ? suggestions : models;
+  }
+
+  getPk(item) {
+    const { pk_name } = this.props;
+
+    return item ? item[pk_name] : null;
+  }
+
+  getDefaultUrl() {
+    const { endpoint, page_size: pageSize, page_size_param: pageSizeParam } = this.props;
+    return `${endpoint}/?${pageSizeParam}=${pageSize}`;
+  }
+
+  select(pk) {
+    const { onSelect } = this.props;
+    const { url } = this.state;
+    const models = this.getModels();
+    const item = models.find(m => this.getPk(m) === pk);
+
+    this.closeWithCallback(() => {
+      onSelect(this.getPk(item), item, url);
+    });
   }
 
   navigateNext() {
@@ -374,26 +288,109 @@ class ModelPicker extends React.Component {
     this.navigate(url);
   }
 
-  onLoadSuggestions(suggestions) {
+  navigatePrevious() {
+    const { shouldShowSuggestions, page } = this.state;
+
+    if (shouldShowSuggestions) {
+      return;
+    }
+
+    const url = `${this.getDefaultUrl()}&page=${page - 1}`;
+    this.navigate(url);
+  }
+
+  // eslint-disable-next-line
+  parseValue(value, fieldName) {
+    const type = typeof value;
+
+    if (type === 'string') {
+      return value;
+    }
+
+    if (type === 'number') {
+      return value;
+    }
+
+    if (type === 'object') {
+      // Django internals
+      if (fieldName === 'content_type') {
+        return value.model;
+      }
+    }
+
+    if (type === 'boolean') {
+      return value ? 'True' : 'False';
+    }
+
+    return '';
+  }
+
+  handleError() {
     this.setState({
-      suggestions: suggestions,
-      suggestionsCount: suggestions.length,
-      loadingSuggestions: false,
+      loading: false,
     });
   }
 
-  onValueChange(newValue) {
-    const shouldShowSuggestions = newValue.trim().length > 2;
-
+  navigate(url) {
+    const urlWithFilters = this.addFilterParams(url);
     this.setState({
-      shouldShowSuggestions: shouldShowSuggestions,
+      loading: true,
+      url,
+    }, () => {
+      // TODO There is no reason for this code to be in the setState callback.
+      // TODO This is not producing errors when status code is not 200,
+      // so the error handling likely does not work.
+      // TODO Use fetch API wrapper.
+      fetch(urlWithFilters, {
+        credentials: 'same-origin',
+      })
+        .then(res => res.json())
+        .then(this.update, this.handleError);
     });
   }
 
-  onLoadStart() {
+  addFilterParams(url) {
+    const { filters } = this.props;
+    let localUrl = url;
+
+    if (filters) {
+      // TODO Redo with map and join.
+      filters.forEach((filter) => {
+        localUrl += `&${filter.field}=${filter.value}`;
+      });
+    }
+
+    return localUrl;
+  }
+
+  update(json) {
+    const { page_size: pageSize } = this.props;
+
+    // If the API does not return the total number of page,
+    // try to calculate it from the number of result and the page size.
+    let numPage = 0;
+    if (json.num_pages) {
+      numPage = json.num_pages;
+    } else if (json.count) {
+      numPage = Math.ceil(json.count / pageSize);
+    }
+
     this.setState({
-      loadingSuggestions: true,
+      numPages: numPage,
+      page: json.page,
+      models: json.results,
+      count: json.count,
+      next: json.next,
+      previous: json.previous,
+      loading: false,
+    }, () => {
+      this.contentRef.scrollTop = 0;
     });
+  }
+
+  closeWithCallback(callback) {
+    this.elRef.classList.add(MODAL_EXIT_CLASS);
+    setTimeout(callback, MODAL_CLOSE_TIMEOUT);
   }
 
   render() {

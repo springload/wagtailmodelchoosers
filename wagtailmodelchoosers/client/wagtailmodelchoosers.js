@@ -35,8 +35,8 @@ window.wagtailModelChoosers.initModelChooser = initModelChooser;
 window.wagtailModelChoosers.initRemoteModelChooser = initRemoteModelChooser;
 
 // Add Sources if WagtailDraftail is available.
-if (window.hasOwnProperty('wagtailDraftail')) {
-  window.wagtailDraftail.registerSources({ ModelSource, RemoteModelSource })
+if (Object.prototype.hasOwnProperty.call(window, 'wagtailDraftail')) {
+  window.wagtailDraftail.registerSources({ ModelSource, RemoteModelSource });
 }
 
 export default ModelChooser;

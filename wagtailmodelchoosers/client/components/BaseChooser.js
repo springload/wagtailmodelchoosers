@@ -13,23 +13,26 @@ const STR = {
 const defaultProps = {
   display: 'title',
   filters: [],
-  pk_name: 'uuid',
   translations: {},
+  pk_name: 'uuid',
+  page_size: 10,
+  page_size_param: 'page_size',
 };
 
 const propTypes = {
   initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   updateInputValue: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
   initial_display_value: PropTypes.string.isRequired,
-  endpoint: PropTypes.string.isRequired,
-  value: PropTypes.any,
   required: PropTypes.bool.isRequired,
   display: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
-  list_display: PropTypes.array.isRequired,
-  filters: PropTypes.array,
   pk_name: PropTypes.string,
   translations: PropTypes.object,
+  label: PropTypes.string.isRequired,
+  list_display: PropTypes.array.isRequired,
+  filters: PropTypes.array,
+  endpoint: PropTypes.string.isRequired,
+  page_size: PropTypes.number,
+  page_size_param: PropTypes.string,
 };
 
 class BaseChooser extends React.Component {
@@ -53,8 +56,8 @@ class BaseChooser extends React.Component {
 
     this.state = {
       pickerVisible: false,
-      selectedId: selectedId,
-      selectedItem: selectedItem,
+      selectedId,
+      selectedItem,
       initialUrl: null,
     };
 
@@ -66,12 +69,6 @@ class BaseChooser extends React.Component {
     this.isOptional = this.isOptional.bind(this);
     this.getChooseButtons = this.getChooseButtons.bind(this);
     this.clearPicker = this.clearPicker.bind(this);
-  }
-
-  showPicker() {
-    this.setState({
-      pickerVisible: true,
-    });
   }
 
   onClose() {
@@ -94,7 +91,7 @@ class BaseChooser extends React.Component {
   getItemPk(item) {
     const { pk_name: pkName } = this.props;
 
-    return !!item ? item[pkName] : null;
+    return item ? item[pkName] : null;
   }
 
   getItemPreview() {
@@ -107,7 +104,9 @@ class BaseChooser extends React.Component {
 
     // Return first non-empty field if `display` is an Array.
     if (Array.isArray(display)) {
-      for (const fieldName of display) {
+      let i;
+      for (i = 0; i < display.length; i + 1) {
+        const fieldName = display[i];
         if (fieldName in selectedItem && selectedItem[fieldName]) {
           return selectedItem[fieldName];
         }
@@ -121,11 +120,6 @@ class BaseChooser extends React.Component {
 
     // Return the object PK as default.
     return this.getItemPk(selectedItem);
-  }
-
-  isOptional() {
-    const { required } = this.props;
-    return !required;
   }
 
   getChooseButtons() {
@@ -157,6 +151,17 @@ class BaseChooser extends React.Component {
     );
   }
 
+  isOptional() {
+    const { required } = this.props;
+    return !required;
+  }
+
+  showPicker() {
+    this.setState({
+      pickerVisible: true,
+    });
+  }
+
   clearPicker(e) {
     e.preventDefault();
 
@@ -172,6 +177,16 @@ class BaseChooser extends React.Component {
 
   render() {
     const { pickerVisible, initialUrl } = this.state;
+    const {
+      list_display: listDisplay,
+      label,
+      endpoint,
+      filters,
+      pk_name: pkName,
+      page_size: pageSize,
+      page_size_param: pageSizeParam,
+      translations,
+    } = this.props;
 
     return (
       <div>
@@ -186,7 +201,14 @@ class BaseChooser extends React.Component {
             url={initialUrl}
             onClose={this.onClose}
             onSelect={this.onSelect}
-            {...this.props}
+            label={label}
+            endpoint={endpoint}
+            filters={filters}
+            list_display={listDisplay}
+            pk_name={pkName}
+            page_size={pageSize}
+            page_size_param={pageSizeParam}
+            translations={translations}
           />
         ) : null}
       </div>

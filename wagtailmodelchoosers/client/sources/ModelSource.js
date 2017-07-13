@@ -34,7 +34,9 @@ class ModelSource extends React.Component {
       entityMutability = 'MUTABLE';
     } else {
       if (Array.isArray(display)) {
-        for (const fieldName of display) {
+        let i;
+        for (i = 0; i < display.length; i + 1) {
+          const fieldName = display[i];
           if (fieldName in data && data[fieldName]) {
             label = data[fieldName];
             break;
@@ -50,9 +52,9 @@ class ModelSource extends React.Component {
       entityMutability = 'IMMUTABLE';
     }
     const nextData = {
-      id: id,
-      label: label,
-      content_type: content_type,
+      id,
+      label,
+      content_type,
     };
 
     const nextState = DraftUtils.createEntity(
@@ -60,7 +62,7 @@ class ModelSource extends React.Component {
       type,
       nextData,
       nextData.label,
-      entityMutability
+      entityMutability,
     );
 
     onUpdate(nextState);
@@ -86,11 +88,18 @@ class ModelSource extends React.Component {
 }
 
 ModelSource.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   editorState: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   options: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   entity: PropTypes.object,
   onClose: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
+};
+
+ModelSource.defaultProps = {
+  entity: {},
 };
 
 export default ModelSource;

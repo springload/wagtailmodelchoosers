@@ -35,7 +35,9 @@ class RemoteModelSource extends React.Component {
       entityMutability = 'MUTABLE';
     } else {
       if (Array.isArray(display)) {
-        for (const fieldName of display) {
+        let i;
+        for (i = 0; i < display.length; i + 1) {
+          const fieldName = display[i];
           if (fieldName in data && data[fieldName]) {
             label = data[fieldName];
             break;
@@ -65,8 +67,8 @@ class RemoteModelSource extends React.Component {
     }
 
     const nextData = Object.assign({}, itemData, {
-      id: id,
-      label: label,
+      id,
+      label,
     });
 
     const nextState = DraftUtils.createEntity(
@@ -74,7 +76,7 @@ class RemoteModelSource extends React.Component {
       type,
       nextData,
       nextData.label,
-      entityMutability
+      entityMutability,
     );
 
     onUpdate(nextState);
@@ -100,11 +102,18 @@ class RemoteModelSource extends React.Component {
 }
 
 RemoteModelSource.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   editorState: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   options: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   entity: PropTypes.object,
   onUpdate: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+};
+
+RemoteModelSource.defaultProps = {
+  entity: {},
 };
 
 export default RemoteModelSource;
