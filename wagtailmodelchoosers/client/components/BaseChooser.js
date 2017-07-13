@@ -13,8 +13,10 @@ const STR = {
 const defaultProps = {
   display: 'title',
   filters: [],
-  pk_name: 'uuid',
   translations: {},
+  pk_name: 'uuid',
+  page_size: 10,
+  page_size_param: 'page_size',
 };
 
 const propTypes = {
@@ -29,6 +31,8 @@ const propTypes = {
   list_display: PropTypes.array.isRequired,
   filters: PropTypes.array,
   endpoint: PropTypes.string.isRequired,
+  page_size: PropTypes.number,
+  page_size_param: PropTypes.string,
 };
 
 class BaseChooser extends React.Component {
@@ -173,7 +177,16 @@ class BaseChooser extends React.Component {
 
   render() {
     const { pickerVisible, initialUrl } = this.state;
-    const { list_display: listDisplay, label, endpoint, filters } = this.props;
+    const {
+      list_display: listDisplay,
+      label,
+      endpoint,
+      filters,
+      pk_name: pkName,
+      page_size: pageSize,
+      page_size_param: pageSizeParam,
+      translations,
+    } = this.props;
 
     return (
       <div>
@@ -192,6 +205,10 @@ class BaseChooser extends React.Component {
             endpoint={endpoint}
             filters={filters}
             list_display={listDisplay}
+            pk_name={pkName}
+            page_size={pageSize}
+            page_size_param={pageSizeParam}
+            translations={translations}
           />
         ) : null}
       </div>

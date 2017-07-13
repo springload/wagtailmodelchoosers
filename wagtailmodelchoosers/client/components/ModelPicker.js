@@ -20,7 +20,6 @@ const STR = {
 
 const defaultProps = {
   filters: [],
-  pk_name: 'uuid',
   page_size: 10,
   page_size_param: 'page_size',
   translations: {},
