@@ -12,13 +12,7 @@ export const tr = (defaultTranslations, customTranslations, key) => {
   return key.replace(/_/g, ' ');
 };
 
-export const pluralize = (
-  defaultTranslations,
-  customTranslations,
-  singularKey,
-  pluralKey,
-  count,
-) => {
+export const pluralize = (defaultTranslations, customTranslations, singularKey, pluralKey, count) => {
   const singular = tr(defaultTranslations, customTranslations, singularKey);
   const plural = tr(defaultTranslations, customTranslations, pluralKey);
 

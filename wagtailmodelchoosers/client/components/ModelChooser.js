@@ -30,25 +30,23 @@ class ModelChooser extends React.Component {
 
     // TODO: Props mutation WTF?
     input.value = newValue;
-  }
+    }
 
-  render() {
-    const { options, input } = this.props;
+    render() {
+      const { options, input } = this.props;
 
-    return (
-      <BaseChooser
-        initialValue={input.value}
-        updateInputValue={this.updateInputValue}
-        {...options}
-      />
-    );
+      return (
+        <BaseChooser
+          initialValue={input.value}
+          updateInputValue={this.updateInputValue}
+          {...options}
+        />
+      );
   }
 }
 
 ModelChooser.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
   options: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   input: PropTypes.object.isRequired,
 };
 

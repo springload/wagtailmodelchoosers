@@ -1,4 +1,3 @@
-/* eslint-disable */
 import ModelChooser, { BaseChooser, ModelPicker, initModelChooser } from './wagtailmodelchoosers';
 
 describe('wagtailmodelchooser', () => {

@@ -27,7 +27,7 @@ Button.defaultProps = {
 
 Button.propTypes = {
   isActive: PropTypes.bool,
-  classes: PropTypes.arrayOf(PropTypes.string),
+  classes: PropTypes.array,
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
