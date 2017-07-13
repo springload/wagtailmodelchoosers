@@ -1,6 +1,6 @@
 {
   "name": "wagtailmodelchoosers",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Allows you to pick generic models (rather than snippets or pages)",
   "main": "setup.py",
   "keywords": [],
