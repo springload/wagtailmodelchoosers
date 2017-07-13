@@ -19,7 +19,6 @@ const STR = {
 };
 
 const defaultProps = {
-  display: 'title',
   filters: [],
   pk_name: 'uuid',
   page_size: 10,

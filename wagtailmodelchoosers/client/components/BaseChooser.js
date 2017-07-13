@@ -25,6 +25,10 @@ const propTypes = {
   display: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
   pk_name: PropTypes.string,
   translations: PropTypes.object,
+  label: PropTypes.string.isRequired,
+  list_display: PropTypes.array.isRequired,
+  filters: PropTypes.array,
+  endpoint: PropTypes.string.isRequired,
 };
 
 class BaseChooser extends React.Component {
@@ -169,6 +173,7 @@ class BaseChooser extends React.Component {
 
   render() {
     const { pickerVisible, initialUrl } = this.state;
+    const { list_display: listDisplay, label, endpoint, filters } = this.props;
 
     return (
       <div>
@@ -183,7 +188,10 @@ class BaseChooser extends React.Component {
             url={initialUrl}
             onClose={this.onClose}
             onSelect={this.onSelect}
-            {...this.props}
+            label={label}
+            endpoint={endpoint}
+            filters={filters}
+            list_display={listDisplay}
           />
         ) : null}
       </div>
