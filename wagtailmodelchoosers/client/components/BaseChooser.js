@@ -105,7 +105,7 @@ class BaseChooser extends React.Component {
     // Return first non-empty field if `display` is an Array.
     if (Array.isArray(display)) {
       let i;
-      for (i = 0; i < display.length; i + 1) {
+      for (i = 0; i < display.length; i += 1) {
         const fieldName = display[i];
         if (fieldName in selectedItem && selectedItem[fieldName]) {
           return selectedItem[fieldName];
