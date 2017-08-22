@@ -1,0 +1,18 @@
+language: python
+cache:
+  pip: true
+  bundler: true
+  directories:
+  - node_modules
+  - ".tox"
+install:
+- nvm install
+- npm install
+script:
+- npm run lint
+- make dist
+notifications:
+  email: false
+  slack:
+    rooms:
+      secure: ECApgbjlDLJYxMSMKo40PJj8nG5BesJXa5GsreQ5h6ursJ5elTs8RugJa3IvPw7fc71RJUH1Hv/g0KMpanlGT7o+jc/V18Ts4rDbIcAlbtlYRFLfcVeisIWoGMIyuerraPTKIRmDpiBGc2ZkuF2JWDSExMQZ3q+cQ2wpUZB8eCOF6erSUhxEqk7QUremmzMy5kSTlyfsIgmRuz1aIIed3Aa6dbsudgHvbIkvmWvE22vvfD1TTy+cDHsLtkJ9N59HIlxg6Z5G8jlP+aKeiUxiSU1TvofleNcsgyZhZZwVhTop4iuYA/i4fKof3fWbR1v98xKfgoigZtNmFvTyegK1SXuawiavgUkOxo0ovW7qPi2Q1wCdTPmyemIymzA0KpkyzYjw5T+Xzb56KNzj2Pi+vKBrMiBqQDX/+h8RGoosF+9KpV3tuL85/y+RhuYrFVGPUR3xN+gs7Y0NnjEKfotdAEhsPXYhXus3Jk7cxUBecHDIY0+OQ5Bmc2DVr7amMrfHZyPnyPflxWPketF05+eSstH5NX8phmgwtMO1YDrIOuJJn7lq6XrlNOc86otJeTp4YFqDAAriq/ZC59rcOhTYeM+U6AS1NfjhNaNz8SwR1tmbPvyL9BEjNkrh5zB2Gl4JoM8tazkX+EltzMQ7T1x0nUtdvRrXeoL+08l+VrvoMo4=
