@@ -1,3 +1,8 @@
+.. image:: https://travis-ci.org/springload/wagtailmodelchoosers.svg?branch=master
+   :target: https://travis-ci.org/springload/wagtailmodelchoosers
+.. image:: https://img.shields.io/pypi/v/wagtailmodelchoosers.svg
+   :target: https://pypi.python.org/pypi/wagtailmodelchoosers
+   
 wagtailmodelchoosers
 ====================
 
