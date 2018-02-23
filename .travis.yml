@@ -5,14 +5,34 @@ cache:
   directories:
   - node_modules
   - ".tox"
+matrix:
+  # See `Which version combinations to include in Travis test matrix?` in `/docs/README.md`.
+  include:
+  - env: TOXENV=py34-dj111-wt113
+    python: 3.4
+  - env: TOXENV=py35-dj111-wt113
+    python: 3.5
+  - env: TOXENV=py36-dj111-wt112
+    python: 3.6
+  - env: TOXENV=py36-dj111-wt113
+    python: 3.6
+  # - env: TOXENV=py36-dj111-wt2b
+  #   python: 3.6
+  # - env: TOXENV=py36-dj2-wt2b
+  #   python: 3.6
 install:
 - nvm install
 - npm install
+- pip install tox coveralls
+- gem install coveralls-lcov
 script:
-- npm run lint
-- make dist
+- make test-ci
+after_success:
+# This is ran on all build, but the coverage is only fully calculated in one.
+# Convert JS LCOV report to Coveralls JSON, merge and send.
+- coveralls-lcov -v -n coverage/lcov.info > js_coverage.json
+- coveralls --merge=js_coverage.json
 notifications:
   email: false
   slack:
-    rooms:
-      secure: ECApgbjlDLJYxMSMKo40PJj8nG5BesJXa5GsreQ5h6ursJ5elTs8RugJa3IvPw7fc71RJUH1Hv/g0KMpanlGT7o+jc/V18Ts4rDbIcAlbtlYRFLfcVeisIWoGMIyuerraPTKIRmDpiBGc2ZkuF2JWDSExMQZ3q+cQ2wpUZB8eCOF6erSUhxEqk7QUremmzMy5kSTlyfsIgmRuz1aIIed3Aa6dbsudgHvbIkvmWvE22vvfD1TTy+cDHsLtkJ9N59HIlxg6Z5G8jlP+aKeiUxiSU1TvofleNcsgyZhZZwVhTop4iuYA/i4fKof3fWbR1v98xKfgoigZtNmFvTyegK1SXuawiavgUkOxo0ovW7qPi2Q1wCdTPmyemIymzA0KpkyzYjw5T+Xzb56KNzj2Pi+vKBrMiBqQDX/+h8RGoosF+9KpV3tuL85/y+RhuYrFVGPUR3xN+gs7Y0NnjEKfotdAEhsPXYhXus3Jk7cxUBecHDIY0+OQ5Bmc2DVr7amMrfHZyPnyPflxWPketF05+eSstH5NX8phmgwtMO1YDrIOuJJn7lq6XrlNOc86otJeTp4YFqDAAriq/ZC59rcOhTYeM+U6AS1NfjhNaNz8SwR1tmbPvyL9BEjNkrh5zB2Gl4JoM8tazkX+EltzMQ7T1x0nUtdvRrXeoL+08l+VrvoMo4=
+    secure: pxW/lXkUqypBnahEyx7RTTtA8NLS/OG3M7f3ZRsWij7g6z55eIAwIwOMXh+iRYF4Ez0J7OK21Fy31WyUNslTaXXj9HVBq3cjeqHLYo1K3VwyPVpgo+JB7OQrzKbJ3abBxdU41bjN7sJKoKCxGDYv6BjuOIWMAgjpJDgvq3XCNi0pGb2Tph1AgOzVM+QabXEIn4cNhJrpSyKcWoUEpV0cxNxqsU5X1n2XS+Hd+6sUGjrVVPrZsIK4InSx28N6i0xFdN4vnsk2Zy1VJYymJbDd3REsj/VsUPp/SJRP3bsJ9S8Xy1LGkwjiotlICQu51/sUz9wVBG67y/aK8e4qskcOnfaZsNBBJbeHHTx6REsl2XmuQO1Lg/unTzT+PQgjpNWscaOSNgVKhCP9v65E6z6VZNuEEfZECo6OAvzQXqwVWIQt+ATGrvJv8SCx0cM5U247Dwd2MSyOtmteDgXy38XoAta/1uEE09U9QogopntnvuLPiJEHAssGatEgejcP7KmDpE6uv6J9xAU35gBdVubDhkwkssfwzNR/hntNrjmiOmvJs1UIU4KQo7GacB5oHyMPR4WZ+SoOCLNNO+2MvvkQ0lDTkwUsfaXoGpo6FkGzYoLAddrfzd8+tJKGOMkyYfAZtwBNi1H52Bg0D/4BGSzg2qhLpHOor1Bni+iLKjDX6QM=
