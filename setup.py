@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import absolute_import, unicode_literals
-
 from codecs import open
 
 from wagtailmodelchoosers import __version__
@@ -13,7 +11,7 @@ except ImportError:
 
 
 install_requires = [
-    'wagtail>=1.7,<2'  # Depends on Wagtail's Django and Django RestFramework depencencies
+    'wagtail>=2.0b1'  # Depends on Wagtail's Django and Django RestFramework depencencies
 ]
 
 # Testing dependencies
