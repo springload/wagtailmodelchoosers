@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.utils.html import format_html, format_html_join
 
-from wagtail.wagtailcore import hooks
+from wagtail.core import hooks
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
 

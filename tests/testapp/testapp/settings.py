@@ -1,5 +1,3 @@
-from __future__ import absolute_import, unicode_literals
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -16,17 +14,17 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     'wagtailmodelchoosers',
 
-    'wagtail.wagtailforms',
-    'wagtail.wagtailredirects',
-    'wagtail.wagtailembeds',
-    'wagtail.wagtailsites',
-    'wagtail.wagtailusers',
-    'wagtail.wagtailsnippets',
-    'wagtail.wagtaildocs',
-    'wagtail.wagtailimages',
-    'wagtail.wagtailsearch',
-    'wagtail.wagtailadmin',
-    'wagtail.wagtailcore',
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.core',
 
     'modelcluster',
     'taggit',
@@ -51,8 +49,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 
-    'wagtail.wagtailcore.middleware.SiteMiddleware',
-    'wagtail.wagtailredirects.middleware.RedirectMiddleware',
+    'wagtail.core.middleware.SiteMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'testapp.urls'
@@ -136,6 +134,6 @@ SECRET_KEY = '4*5e^@2%(h#$*b4=ze_kcdw46-$0z#rrf3661c5(&+x^oj=4)+'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 try:
-    from .local import *
+    from .local import *  # noqa: F401, F403
 except ImportError:
     pass

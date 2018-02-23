@@ -1,7 +1,5 @@
-from __future__ import absolute_import, unicode_literals
-
 from django.test import TestCase, override_settings
-from wagtail.wagtailcore.models import Page
+from wagtail.core.models import Page
 
 from core.models import SimplePage
 from wagtailmodelchoosers import blocks, widgets
