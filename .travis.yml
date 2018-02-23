@@ -8,18 +8,18 @@ cache:
 matrix:
   # See `Which version combinations to include in Travis test matrix?` in `/docs/README.md`.
   include:
-   - env: TOXENV=py34-dj111-wt113
-     python: 3.4
-   - env: TOXENV=py35-dj111-wt113
-     python: 3.5
-   - env: TOXENV=py36-dj111-wt112
-     python: 3.6
-   - env: TOXENV=py36-dj111-wt113
-     python: 3.6
-  #  - env: TOXENV=py36-dj111-wt2b
-  #    python: 3.6
-  #  - env: TOXENV=py36-dj2-wt2b
-  #    python: 3.6
+  - env: TOXENV=py34-dj111-wt113
+    python: 3.4
+  - env: TOXENV=py35-dj111-wt113
+    python: 3.5
+  - env: TOXENV=py36-dj111-wt112
+    python: 3.6
+  - env: TOXENV=py36-dj111-wt113
+    python: 3.6
+  # - env: TOXENV=py36-dj111-wt2b
+  #   python: 3.6
+  # - env: TOXENV=py36-dj2-wt2b
+  #   python: 3.6
 install:
 - nvm install
 - npm install
@@ -35,5 +35,4 @@ after_success:
 notifications:
   email: false
   slack:
-    rooms:
-secure: K4gEBdaBT6W69jk0+kGCP2fCn+IgtgYmADlJBmN0uxeQ9vbU2ubKjOJzZ7pCR06RvNCudyTsKYLDOu1sgpJhrU3l9+ELiuXRaHXspNHmvDJXbU704eHrL6ahAlr7OLDokaeWXz7c78znvvOwPVKxdfKuYTUQdFKbtr6ZnMlVMC+iagBiPdcWbuL2/HVuxoVAz6+KiT+eh5/Rj++GlxBIVNJtf/L9jHYJ9ZwrEsILeGNXR+b+qUgGST41Ft+aeLX6ORwbuSfki2qB1UUxrKSYtzUdP3xWZJ5GRFOM6t0Rb5kVn4MrFReHF5MWlXT85dj1dpq6UINzohhRkfjmhfeggBcbBK6uNVdKyrTkgnFltIbqP8pZN8kR3KUEik7GrmJXPSjh/hg41E3Kj2M4htIepB2QdHukGW+/4A5GaLvDWPOwoLByCn2KB0+pvutMkROWmgOmAD5V8+vC6n2pkpUnqBKNRDQ3lzEpkRsaRSU0Vp2t6v57dRVRJygDxAslH5TXoVj9fq3fQ797Y56mDNrWKZxOeBwMqbLiaYpgWofzHIa+3xfNbjmNZskBIN1+Fh3q0/MOro5pPTMtnJmqciieWpAzZwpG34JAD7WejQXtB+Wbe3jdQcYUyN8BAJBq7P7ejNbT0/PtgSm0xHGJM5KrlCCDHMH7Hhm53MJQUv97vPM=
+    secure: pxW/lXkUqypBnahEyx7RTTtA8NLS/OG3M7f3ZRsWij7g6z55eIAwIwOMXh+iRYF4Ez0J7OK21Fy31WyUNslTaXXj9HVBq3cjeqHLYo1K3VwyPVpgo+JB7OQrzKbJ3abBxdU41bjN7sJKoKCxGDYv6BjuOIWMAgjpJDgvq3XCNi0pGb2Tph1AgOzVM+QabXEIn4cNhJrpSyKcWoUEpV0cxNxqsU5X1n2XS+Hd+6sUGjrVVPrZsIK4InSx28N6i0xFdN4vnsk2Zy1VJYymJbDd3REsj/VsUPp/SJRP3bsJ9S8Xy1LGkwjiotlICQu51/sUz9wVBG67y/aK8e4qskcOnfaZsNBBJbeHHTx6REsl2XmuQO1Lg/unTzT+PQgjpNWscaOSNgVKhCP9v65E6z6VZNuEEfZECo6OAvzQXqwVWIQt+ATGrvJv8SCx0cM5U247Dwd2MSyOtmteDgXy38XoAta/1uEE09U9QogopntnvuLPiJEHAssGatEgejcP7KmDpE6uv6J9xAU35gBdVubDhkwkssfwzNR/hntNrjmiOmvJs1UIU4KQo7GacB5oHyMPR4WZ+SoOCLNNO+2MvvkQ0lDTkwUsfaXoGpo6FkGzYoLAddrfzd8+tJKGOMkyYfAZtwBNi1H52Bg0D/4BGSzg2qhLpHOor1Bni+iLKjDX6QM=
