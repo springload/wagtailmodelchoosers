@@ -1,8 +1,6 @@
-from django.apps import apps
-from django.db.models import Q, CharField
-
 import requests
-
+from django.apps import apps
+from django.db.models import CharField, Q
 from rest_framework import filters, serializers
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.mixins import ListModelMixin
@@ -11,7 +9,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ViewSet
 
 from wagtailmodelchoosers.paginators import GenericModelPaginator
-from wagtailmodelchoosers.utils import get_chooser_options, get_query_keys_map, get_response_keys_map
+from wagtailmodelchoosers.utils import (
+    get_chooser_options,
+    get_query_keys_map,
+    get_response_keys_map,
+)
 
 
 class ModelView(ListModelMixin, GenericViewSet):

@@ -187,7 +187,8 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
 
     def render_js_init(self, id_, name, value):
         data = self.get_js_init_data(id_, name, value)
-        return 'wagtailModelChoosers.initRemoteModelChooser({id_}, {data})'.format(id_=json.dumps(id_), data=json.dumps(data))
+        return 'wagtailModelChoosers.initRemoteModelChooser({id_}, {data})'.format(
+            id_=json.dumps(id_), data=json.dumps(data))
 
     def render_html(self, name, value, attrs):
         context = {

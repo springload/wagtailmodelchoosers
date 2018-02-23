@@ -1,12 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 
 import uuid
-from django.test import TestCase
 
+from django.test import TestCase
 from wagtail.wagtailcore.models import Page
-from wagtailmodelchoosers import widgets
 
 from core.models import SimplePage
+from wagtailmodelchoosers import widgets
 
 
 class TestModelChooserWidget(TestCase):
