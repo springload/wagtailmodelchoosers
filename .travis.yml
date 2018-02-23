@@ -5,14 +5,35 @@ cache:
   directories:
   - node_modules
   - ".tox"
+matrix:
+  # See `Which version combinations to include in Travis test matrix?` in `/docs/README.md`.
+  include:
+   - env: TOXENV=py34-dj111-wt113
+     python: 3.4
+   - env: TOXENV=py35-dj111-wt113
+     python: 3.5
+   - env: TOXENV=py36-dj111-wt112
+     python: 3.6
+   - env: TOXENV=py36-dj111-wt113
+     python: 3.6
+  #  - env: TOXENV=py36-dj111-wt2b
+  #    python: 3.6
+  #  - env: TOXENV=py36-dj2-wt2b
+  #    python: 3.6
 install:
 - nvm install
 - npm install
+- pip install tox coveralls
+- gem install coveralls-lcov
 script:
-- npm run lint
-- make dist
+- make test-ci
+after_success:
+# This is ran on all build, but the coverage is only fully calculated in one.
+# Convert JS LCOV report to Coveralls JSON, merge and send.
+- coveralls-lcov -v -n coverage/lcov.info > js_coverage.json
+- coveralls --merge=js_coverage.json
 notifications:
   email: false
   slack:
     rooms:
-      secure: ECApgbjlDLJYxMSMKo40PJj8nG5BesJXa5GsreQ5h6ursJ5elTs8RugJa3IvPw7fc71RJUH1Hv/g0KMpanlGT7o+jc/V18Ts4rDbIcAlbtlYRFLfcVeisIWoGMIyuerraPTKIRmDpiBGc2ZkuF2JWDSExMQZ3q+cQ2wpUZB8eCOF6erSUhxEqk7QUremmzMy5kSTlyfsIgmRuz1aIIed3Aa6dbsudgHvbIkvmWvE22vvfD1TTy+cDHsLtkJ9N59HIlxg6Z5G8jlP+aKeiUxiSU1TvofleNcsgyZhZZwVhTop4iuYA/i4fKof3fWbR1v98xKfgoigZtNmFvTyegK1SXuawiavgUkOxo0ovW7qPi2Q1wCdTPmyemIymzA0KpkyzYjw5T+Xzb56KNzj2Pi+vKBrMiBqQDX/+h8RGoosF+9KpV3tuL85/y+RhuYrFVGPUR3xN+gs7Y0NnjEKfotdAEhsPXYhXus3Jk7cxUBecHDIY0+OQ5Bmc2DVr7amMrfHZyPnyPflxWPketF05+eSstH5NX8phmgwtMO1YDrIOuJJn7lq6XrlNOc86otJeTp4YFqDAAriq/ZC59rcOhTYeM+U6AS1NfjhNaNz8SwR1tmbPvyL9BEjNkrh5zB2Gl4JoM8tazkX+EltzMQ7T1x0nUtdvRrXeoL+08l+VrvoMo4=
+secure: K4gEBdaBT6W69jk0+kGCP2fCn+IgtgYmADlJBmN0uxeQ9vbU2ubKjOJzZ7pCR06RvNCudyTsKYLDOu1sgpJhrU3l9+ELiuXRaHXspNHmvDJXbU704eHrL6ahAlr7OLDokaeWXz7c78znvvOwPVKxdfKuYTUQdFKbtr6ZnMlVMC+iagBiPdcWbuL2/HVuxoVAz6+KiT+eh5/Rj++GlxBIVNJtf/L9jHYJ9ZwrEsILeGNXR+b+qUgGST41Ft+aeLX6ORwbuSfki2qB1UUxrKSYtzUdP3xWZJ5GRFOM6t0Rb5kVn4MrFReHF5MWlXT85dj1dpq6UINzohhRkfjmhfeggBcbBK6uNVdKyrTkgnFltIbqP8pZN8kR3KUEik7GrmJXPSjh/hg41E3Kj2M4htIepB2QdHukGW+/4A5GaLvDWPOwoLByCn2KB0+pvutMkROWmgOmAD5V8+vC6n2pkpUnqBKNRDQ3lzEpkRsaRSU0Vp2t6v57dRVRJygDxAslH5TXoVj9fq3fQ797Y56mDNrWKZxOeBwMqbLiaYpgWofzHIa+3xfNbjmNZskBIN1+Fh3q0/MOro5pPTMtnJmqciieWpAzZwpG34JAD7WejQXtB+Wbe3jdQcYUyN8BAJBq7P7ejNbT0/PtgSm0xHGJM5KrlCCDHMH7Hhm53MJQUv97vPM=

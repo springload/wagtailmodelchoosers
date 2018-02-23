@@ -19,12 +19,13 @@ install_requires = [
 # Testing dependencies
 testing_extras = [
     # Required for running the tests
-    'tox>=2.3.1',
+    'tox>=2.3.1,<2.4',
 
     # For coverage and PEP8 linting
-    'coverage>=4.1.0',
-    'flake8>=3.2.0',
-    'isort>=4.2.5',
+    'coverage>=4.1.0,<4.2',
+    'flake8>=3.2.0,<3.3',
+    'flake8-colors>=0.1.6,<1',
+    'isort==4.2.5',
 ]
 
 # Documentation dependencies
@@ -52,11 +53,10 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        # 'Programming Language :: Python :: 2',
-        # 'Programming Language :: Python :: 2.7',
-        # 'Programming Language :: Python :: 3',
-        # 'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Internet :: WWW/HTTP :: Site Management',
