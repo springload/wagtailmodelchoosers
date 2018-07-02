@@ -1,8 +1,10 @@
 import requests
 from django.apps import apps
 from django.db.models import CharField, Q
-from rest_framework import filters, serializers
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import serializers
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.filters import SearchFilter
 from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -20,7 +22,7 @@ class ModelView(ListModelMixin, GenericViewSet):
     pagination_class = GenericModelPaginator
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
+    filter_backends = (DjangoFilterBackend, SearchFilter,)
 
     def get_params(self):
         return self.request.parser_context.get('kwargs')
@@ -100,7 +102,7 @@ class ModelView(ListModelMixin, GenericViewSet):
 class RemoteResourceView(ViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
+    filter_backends = (DjangoFilterBackend, SearchFilter,)
     http_method_names = ('get', 'head', 'options')
 
     def get_params(self):
