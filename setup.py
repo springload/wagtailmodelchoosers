@@ -11,7 +11,7 @@ except ImportError:
 
 
 install_requires = [
-    'wagtail>=2.0b1',  # Depends on Wagtail's Django and Django RestFramework depencencies
+    'wagtail>=2',  # Depends on Wagtail's Django and Django RestFramework depencencies
     'django-filter>=1.1.0,<2',
 ]
 
@@ -48,6 +48,8 @@ setup(
     long_description=readme,
     classifiers=[
         'Environment :: Web Environment',
+        'Framework :: Wagtail',
+        'Framework :: Wagtail :: 2',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
