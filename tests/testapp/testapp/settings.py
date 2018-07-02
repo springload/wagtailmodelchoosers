@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'wagtailmodelchoosers',
 
     'wagtail.contrib.forms',
+    'wagtail.contrib.modeladmin',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
     'wagtail.sites',
@@ -131,6 +132,22 @@ DEBUG = True
 SECRET_KEY = '4*5e^@2%(h#$*b4=ze_kcdw46-$0z#rrf3661c5(&+x^oj=4)+'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Model Choosers
+
+MODEL_CHOOSERS_OPTIONS = {
+    'simple_model': {
+        'label': 'Simple Model',
+        'display': 'name',
+        'list_display': [
+            {'label': 'Name', 'name': 'name'},
+         ],
+        'content_type': 'core.SimpleModel',
+        'pk_name': 'id',
+    }
+}
+
 
 try:
     from .local import *  # noqa: F401, F403
