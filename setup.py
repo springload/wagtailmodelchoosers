@@ -32,20 +32,21 @@ documentation_extras = [
 
 ]
 
-with open('README.rst', 'r', 'utf-8') as f:
-    readme = f.read()
+with open('README.md', 'r', 'utf-8') as fh:
+    long_description = fh.read()
 
 setup(
     name='wagtailmodelchoosers',
     version=__version__,
     description='A Wagtail app to pick generic models (rather than snippets or pages)',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Springload',
     author_email='hello@springload.co.nz',
     url='https://github.com/springload/wagtailmodelchoosers',
     packages=find_packages(),
     include_package_data=True,
     license='MIT',
-    long_description=readme,
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Wagtail',
