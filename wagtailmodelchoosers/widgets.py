@@ -4,6 +4,7 @@ import uuid
 from django.apps import apps
 from django.forms import widgets
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.functional import cached_property
 
 from wagtail.utils.widgets import WidgetWithScript
@@ -77,7 +78,6 @@ class ModelChooserWidget(WidgetWithScript, widgets.Input):
     def get_endpoint(self):
         app, class_name = self.get_class_name()
 
-        from django.core.urlresolvers import reverse
         return reverse('wagtailmodelchoosers_api_model', args=[app, class_name])
 
     def get_internal_value(self, value):
