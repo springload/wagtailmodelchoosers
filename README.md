@@ -54,19 +54,24 @@ It looks for a `MODEL_CHOOSERS_OPTIONS` dictionary in the settings where the key
 The ModelChooser and RemoteModelChooser share a similar base configuration and only have a few specific fields.
 
 ```python
+NAVIGATION_DISPLAY = 'name'
 MODEL_CHOOSERS_OPTIONS = {
     'navigation': {
         'label': 'Navigation',                                   # The label to use for buttons or modal title
-        'display': 'name',                                       # The field to display when selecting an object
+        'display': NAVIGATION_DISPLAY,                           # The field to display when selecting an object
         'list_display': [                                        # The fields to display in the chooser
             {'label': 'Name', 'name': 'name'},
             {'label': 'Identity', 'name': 'identity'},
             {'label': 'Active', 'name': 'active'},
         ],
-        'content_type': 'core.Navigation',                       # ONLY FOR MODEL: The django content type of the model
-        'fields_to_save': ['id'] + RATE_CHOOSER_DISPLAY_FIELDS,  # ONLY FOR REMOTE: The remote objects fields to save to the DB. Leave empty to save the whole object.
-        'remote_endpoint': 'https://...'                         # ONLY FOR REMOTE: The remote API endpoint.
         'pk_name': 'uuid',                                       # The primary key name of the model
+
+        # ONLY FOR MODEL:
+        'content_type': 'core.Navigation',                       # The django content type of the model
+
+        # ONLY FOR REMOTE:
+        'fields_to_save': ['id', NAVIGATION_DISPLAY],            # The remote objects fields to save to the DB (it should contain the `display` field). Leave empty to save the whole object.
+        'remote_endpoint': 'https://...'                         # The remote API endpoint.
     }
 }
 ```
@@ -107,4 +112,3 @@ make help            # See what commands are available.
 1. Back on master with the PR merged, use `make publish` (confirm, and enter your password).
 1. Finally, go to GitHub and create a release and a tag for the new version.
 1. Done!
-
