@@ -9,6 +9,7 @@ import ModelPicker from './components/ModelPicker';
 import RemoteModelChooser from './components/RemoteModelChooser';
 import ModelSource from './sources/ModelSource';
 import RemoteModelSource from './sources/RemoteModelSource';
+import GenericModelDecorator from './decorators/GenericModelDecorator';
 
 const initModelChooser = (id, data) => {
   const input = document.getElementById(id);
@@ -33,8 +34,13 @@ const initRemoteModelChooser = (id, data) => {
 window.wagtailModelChoosers = {};
 window.wagtailModelChoosers.initModelChooser = initModelChooser;
 window.wagtailModelChoosers.initRemoteModelChooser = initRemoteModelChooser;
+window.wagtailModelChoosers.ModelSource = ModelSource;
+window.wagtailModelChoosers.RemoteModelSource = RemoteModelSource;
+window.wagtailModelChoosers.GenericModelDecorator = GenericModelDecorator;
 
-// Add Sources if WagtailDraftail is available.
+// Add Sources to WagtailDraftail if available.
+// This is for backward compatibility for projects still using WagtailDraftail
+// despite upgrading Wagtail 2.0 which has Draftail built-in.
 if (Object.prototype.hasOwnProperty.call(window, 'wagtailDraftail')) {
   window.wagtailDraftail.registerSources({ ModelSource, RemoteModelSource });
 }

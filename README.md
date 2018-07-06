@@ -18,6 +18,8 @@ Check out [Awesome Wagtail](https://github.com/springload/awesome-wagtail) for m
 
 ## Usage
 
+### Blocks & Fields
+
 `ModelChooserBlock` takes the name of the chooser configuration as first positional argument. Use other block kwargs (e.g. `required`) as usual.
 
 ```python
@@ -45,7 +47,45 @@ class CustomPage(Page):
 
 To select a model from a remote API, respectively use `RemoteModelChooserBlock` and `RemoteModelChooserPanel` instead.
 
-If you have [WagtailDraftail](https://github.com/springload/wagtaildraftail) installed, it will automatically register the `ModelSource` and `RemoteModelSource` to the JS. Refer to `WagtailDraftail`'s [documentation](https://github.com/springload/wagtaildraftail#configuration) to hook it up properly.
+### Draftail
+
+If you have `WagtailDraftail` installed, it will automatically register the `ModelSource` and `RemoteModelSource` to the JS. Refer to `WagtailDraftail`'s [documentation](https://github.com/springload/wagtaildraftail#configuration) to hook it up properly.
+
+If you use `Draftail` from `Wagtail 2.x`, do the following in you app's `wagtail_hooks.py` file:
+
+```python
+from wagtailmodelchoosers.rich_text import get_chooser_feature
+
+
+register_custom_model_chooser_feature, register_custom_model_chooser_plugin = get_chooser_feature(
+    # Required.
+    chooser='custom_model',       # Same as what was used for the block and/or panel.
+    feature_name='custom_model',  # RichText's feature name (e.g. `RichTextField(features=['bold', 'custom_model'])`).
+    feature_type='CUSTOM_MODEL',  # Draftail's *unique* and *never changing* feature ID.
+
+    # Optional but recommended for nice UI display.
+    icon='icon icon-snippet',
+    label='Custom Model',
+    description='Insert a Custom Model inline',
+
+    # Optional if you need to customise the generic behaviour.
+    # Note that it requires good knowlegde of Draftail source/decorators and Wagtail features converters.
+    from_database_format=None,    # Wagtail from database converter
+    to_database_format=None,      # Wagtail to database converter
+    js_source='',                 # Draftail Source
+    js_decorator='',              # Draftail Decorator
+)
+
+
+@hooks.register('register_rich_text_features')
+def register_chooser_feature(features):
+    register_custom_model_chooser_feature(features)
+
+
+@hooks.register('insert_editor_js')
+def insert_chooser_js():
+    return register_custom_model_chooser_plugin
+```
 
 ### Configuration
 
