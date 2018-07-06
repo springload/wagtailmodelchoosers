@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
 
 const getSuggestionValue = suggestion => suggestion.name;
@@ -26,14 +27,27 @@ class AutoComplete extends Component {
     };
 
     this.loadSuggestions = this.loadSuggestions.bind(this);
-    this.onSuggestionsUpdateRequested = this.onSuggestionsUpdateRequested.bind(this);
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
     this.onChange = this.onChange.bind(this);
   }
 
-  onSuggestionsUpdateRequested({ value }) {
+  onSuggestionsFetchRequested({ value }) {
     const { onLoadStart } = this.props;
     onLoadStart();
     this.loadSuggestions(value);
+  }
+
+  onSuggestionsClearRequested() {
+    const { onLoadSuggestions } = this.props;
+
+    this.setState(
+      {
+        suggestions: [],
+        loading: false,
+      },
+      () => onLoadSuggestions([]),
+    );
   }
 
   onChange(event, { newValue }) {
@@ -71,7 +85,8 @@ class AutoComplete extends Component {
       <div>
         <Autosuggest
           suggestions={suggestions}
-          onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
           inputProps={{

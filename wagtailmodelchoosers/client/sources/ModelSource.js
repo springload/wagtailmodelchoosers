@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { DraftUtils } from 'draftail';
+import { AtomicBlockUtils } from 'draft-js';
 
 import ModelPicker from '../components/ModelPicker';
 
@@ -57,12 +57,18 @@ class ModelSource extends React.Component {
       content_type,
     };
 
-    const nextState = DraftUtils.createEntity(
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
       editorState,
       type,
       nextData,
       nextData.label,
       entityMutability,
+    );
+    const nextState = AtomicBlockUtils.insertAtomicBlock(
+      editorState,
+      contentStateWithEntity.getLastCreatedEntityKey(),
+      ' ',
     );
 
     onUpdate(nextState);
