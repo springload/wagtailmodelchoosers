@@ -2,8 +2,9 @@ import uuid
 
 from django.test import TestCase
 from wagtail.core.models import Page
+from wagtail.tests.utils.form_data import rich_text
 
-from core.models import SimplePage
+from core.models import SimpleModel, SimplePage
 from wagtailmodelchoosers import widgets
 
 
@@ -11,10 +12,14 @@ class TestModelChooserWidget(TestCase):
     def setUp(self):
         self.root_page = Page.objects.get(id=2)
 
+        # Add test model
+        self.simple_model = SimpleModel.objects.create(name='Choubidou')
+
         # Add child page
         self.child_page = SimplePage(
-            title="foobarbaz",
-            content="hello",
+            title='foobarbaz',
+            rich_text=rich_text('hello'),
+            required_simple_model=self.simple_model,
         )
         self.root_page.add_child(instance=self.child_page)
 
