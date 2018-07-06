@@ -19,7 +19,7 @@ class RemoteModelSource extends React.Component {
   }
 
   onSelected(id, data) {
-    const { editorState, onUpdate, options: {
+    const { editorState, onComplete, entityType: {
       display = 'title', fields_to_save: fieldsToSave, pk_name: pkName = 'uuid', type } } = this.props;
     let label;
     let entityMutability;
@@ -66,18 +66,16 @@ class RemoteModelSource extends React.Component {
       itemData = data;
     }
 
-    const nextData = Object.assign({}, itemData, {
+    const entityData = Object.assign({}, itemData, {
       id,
       label,
     });
 
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity(
-      editorState,
       type,
-      nextData,
-      nextData.label,
       entityMutability,
+      entityData,
     );
     const nextState = AtomicBlockUtils.insertAtomicBlock(
       editorState,
@@ -85,19 +83,17 @@ class RemoteModelSource extends React.Component {
       ' ',
     );
 
-    onUpdate(nextState);
+    onComplete(nextState);
   }
 
   render() {
-    const { entity, options } = this.props;
+    const { entityType: options } = this.props;
     const endpoint = `${API_BASE_URL}${options.content_type}`;
 
     return (
       <ModelPicker
-        onChange={this.onSelected}
         onSelect={this.onSelected}
         onClose={this.onClose}
-        entity={entity}
         endpoint={endpoint}
         value={null}
         required={false}
@@ -110,16 +106,10 @@ class RemoteModelSource extends React.Component {
 RemoteModelSource.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   editorState: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  options: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  entity: PropTypes.object,
-  onUpdate: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-};
-
-RemoteModelSource.defaultProps = {
-  entity: {},
+  onComplete: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  entityType: PropTypes.object.isRequired,
 };
 
 export default RemoteModelSource;

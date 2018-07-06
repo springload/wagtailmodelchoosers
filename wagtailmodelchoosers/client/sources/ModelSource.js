@@ -19,7 +19,8 @@ class ModelSource extends React.Component {
   }
 
   onSelected(id, data) {
-    const { editorState, onUpdate, options: { content_type, display = 'title', pk_name: pkName = 'uuid', type } } = this.props;
+    const { editorState, onComplete, entityType: {
+      content_type, display = 'title', pk_name: pkName = 'uuid', type } } = this.props;
     let label;
     let entityMutability;
     if (display === '__selection__') {
@@ -51,7 +52,7 @@ class ModelSource extends React.Component {
       }
       entityMutability = 'IMMUTABLE';
     }
-    const nextData = {
+    const entityData = {
       id,
       label,
       content_type,
@@ -59,11 +60,9 @@ class ModelSource extends React.Component {
 
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity(
-      editorState,
       type,
-      nextData,
-      nextData.label,
       entityMutability,
+      entityData,
     );
     const nextState = AtomicBlockUtils.insertAtomicBlock(
       editorState,
@@ -71,19 +70,17 @@ class ModelSource extends React.Component {
       ' ',
     );
 
-    onUpdate(nextState);
+    onComplete(nextState);
   }
 
   render() {
-    const { entity, options } = this.props;
+    const { entityType: options } = this.props;
     const endpoint = `${API_BASE_URL}${options.content_type}`;
 
     return (
       <ModelPicker
-        onChange={this.onSelected}
         onSelect={this.onSelected}
         onClose={this.onClose}
-        entity={entity}
         endpoint={endpoint}
         value={null}
         required={false}
@@ -96,16 +93,10 @@ class ModelSource extends React.Component {
 ModelSource.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   editorState: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  options: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  entity: PropTypes.object,
   onClose: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-};
-
-ModelSource.defaultProps = {
-  entity: {},
+  onComplete: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  entityType: PropTypes.object.isRequired,
 };
 
 export default ModelSource;

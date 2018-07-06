@@ -49,6 +49,8 @@ To select a model from a remote API, respectively use `RemoteModelChooserBlock` 
 
 ### Draftail
 
+**Important**: Whether you use [WagtailDraftail](https://github.com/springload/wagtaildraftail) or use `Wagtail 2.x` built-in `Draftail` editor, the underlying version of `Draftail` needs to be at least `v0.17.0`.
+
 If you have `WagtailDraftail` installed, it will automatically register the `ModelSource` and `RemoteModelSource` to the JS. Refer to `WagtailDraftail`'s [documentation](https://github.com/springload/wagtaildraftail#configuration) to hook it up properly.
 
 If you use `Draftail` from `Wagtail 2.x`, do the following in you app's `wagtail_hooks.py` file:
