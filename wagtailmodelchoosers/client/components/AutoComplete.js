@@ -40,13 +40,11 @@ class AutoComplete extends Component {
 
   onSuggestionsClearRequested() {
     const { onLoadSuggestions } = this.props;
-
     this.setState(
       {
-        suggestions: [],
         loading: false,
       },
-      () => onLoadSuggestions([]),
+      () => onLoadSuggestions(this.state.suggestions),
     );
   }
 
@@ -58,6 +56,7 @@ class AutoComplete extends Component {
     }, () => {
       onChange(newValue);
     });
+      
   }
 
   loadSuggestions(suggestionValue) {
