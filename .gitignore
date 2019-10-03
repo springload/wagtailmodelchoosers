@@ -10,7 +10,6 @@ build/
 
 # Application
 var
-static
 
 # Python Package
 dist/
