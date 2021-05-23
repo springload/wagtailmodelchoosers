@@ -17,7 +17,7 @@
   "babel": {
     "presets": [
       [
-        "env",
+        "@babel/preset-env",
         {
           "targets": {
             "browsers": [
@@ -27,7 +27,7 @@
           }
         }
       ],
-      "react"
+      "@babel/preset-react"
     ]
   },
   "eslintConfig": {
@@ -50,22 +50,21 @@
     }
   },
   "dependencies": {
-    "draft-js": "^0.10.0",
-    "draftail": "^0.6.0",
+    "draft-js": "^0.10.5",
     "promise": "^8.0.0",
     "prop-types": "^15.5.8",
-    "react": "^15.4.2",
-    "react-autosuggest": "^3.7.4",
-    "react-dom": "^15.4.2",
+    "react": "^16.0.0",
+    "react-autosuggest": "^10.1.0",
+    "react-dom": "^16.0.0",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "babel-core": "^6.22.1",
+    "@babel/core": "^7.14.3",
     "babel-jest": "^19.0.0",
-    "babel-loader": "^6.2.10",
+    "babel-loader": "^8.2.1",
     "babel-polyfill": "^6.23.0",
-    "babel-preset-env": "^1.4.0",
-    "babel-preset-react": "^6.22.0",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-react": "^7.13.13",
     "css-loader": "^0.26.1",
     "enzyme": "^2.8.2",
     "enzyme-to-json": "^1.5.1",
@@ -74,11 +73,12 @@
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "3.0.2",
     "eslint-plugin-react": "6.10.3",
-    "extract-text-webpack-plugin": "^2.0.0",
+    "mini-css-extract-plugin": "^1.6.0",
     "jest": "^19.0.2",
     "nightmare": "^2.10.0",
     "react-test-renderer": "^15.5.4",
-    "webpack": "^2.2.1"
+    "webpack": "^5.37.0",
+    "webpack-cli": "^4.7.0"
   },
   "scripts": {
     "start": "webpack --config wagtailmodelchoosers/client/webpack.config.dev.js --watch",

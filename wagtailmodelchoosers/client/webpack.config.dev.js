@@ -1,12 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const outputPath = path.join(__dirname, '..', 'static', 'wagtailmodelchoosers');
 
 module.exports = {
   entry: {
     wagtailmodelchoosers: './wagtailmodelchoosers/client/wagtailmodelchoosers.js',
+    draftailmodelchoosers: './wagtailmodelchoosers/client/draftailmodelchoosers.js',
     polyfills: './wagtailmodelchoosers/client/polyfills.js',
   },
   output: {
@@ -15,7 +16,7 @@ module.exports = {
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
-    new ExtractTextPlugin('wagtailmodelchoosers.css'),
+    new MiniCssExtractPlugin(),
   ],
   module: {
     rules: [
@@ -25,10 +26,8 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          use: ['css-loader'],
-        }),
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
     ],
   },

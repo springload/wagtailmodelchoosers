@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Autosuggest from 'react-autosuggest';
 
 const getSuggestionValue = suggestion => suggestion.name;
@@ -71,7 +72,8 @@ class AutoComplete extends Component {
       <div>
         <Autosuggest
           suggestions={suggestions}
-          onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+          onSuggestionsFetchRequested={this.onSuggestionsUpdateRequested}
+          onSuggestionsClearRequested={() => null}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
           inputProps={{
