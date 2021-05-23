@@ -1,0 +1,4 @@
+{% include 'django/forms/widgets/hidden.html' %}
+<script>
+modelChooserDraftailInit({{ entity_types|safe }}, {{ widget.options_json|safe }}, '#{{ widget.attrs.id|escapejs }}');
+</script>

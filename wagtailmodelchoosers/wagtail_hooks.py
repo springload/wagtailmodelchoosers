@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
@@ -5,6 +6,7 @@ from django.utils.html import format_html, format_html_join
 from wagtail.core import hooks
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
+import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 
 
 @hooks.register('insert_editor_css')
@@ -43,3 +45,15 @@ def wagtailmodelchoosers_admin_urls():
             name='wagtailmodelchoosers_api_remote_model'
         )
     ]
+
+@hooks.register('register_rich_text_features')
+def register_rich_text_features(features):
+    entity_types = getattr(settings, 'MODEL_CHOOSER_DRAFTAIL_ENTITY_TYPES', {})
+    for entity_type in entity_types:
+        type_ = entity_type.get('type', None)
+        if not type_:
+            continue
+
+        features.default_features.append(type_)
+        feature = draftail_features.EntityFeature(entity_type)
+        features.register_editor_plugin('draftail', type_, feature)
