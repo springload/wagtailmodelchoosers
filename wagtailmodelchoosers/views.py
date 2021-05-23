@@ -7,6 +7,7 @@ from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 
 from wagtailmodelchoosers.paginators import GenericModelPaginator
 from wagtailmodelchoosers.utils import (
@@ -20,7 +21,7 @@ class ModelView(ListModelMixin, GenericViewSet):
     pagination_class = GenericModelPaginator
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
 
     def get_params(self):
         return self.request.parser_context.get('kwargs')
@@ -100,7 +101,7 @@ class ModelView(ListModelMixin, GenericViewSet):
 class RemoteResourceView(ViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
     http_method_names = ('get', 'head', 'options')
 
     def get_params(self):

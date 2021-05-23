@@ -77,7 +77,7 @@ class ModelChooserWidget(WidgetWithScript, widgets.Input):
     def get_endpoint(self):
         app, class_name = self.get_class_name()
 
-        from django.core.urlresolvers import reverse
+        from django.urls import reverse
         return reverse('wagtailmodelchoosers_api_model', args=[app, class_name])
 
     def get_internal_value(self, value):
@@ -156,7 +156,7 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
         super(RemoteModelChooserWidget, self).__init__(**kwargs)
 
     def get_endpoint(self):
-        from django.core.urlresolvers import reverse
+        from django.urls import reverse
         return reverse('wagtailmodelchoosers_api_remote_model', args=[self.chooser])
 
     def get_display_value(self, value):
