@@ -2,11 +2,15 @@ import json
 import uuid
 
 from django.apps import apps
-from django.forms import widgets
+from django.conf import settings
+from django.forms import widgets, Media
+
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 
 from wagtail.utils.widgets import WidgetWithScript
+from wagtail.admin.rich_text.editors.draftail import DraftailRichTextArea
+from wagtail.admin.staticfiles import versioned_static
 
 from .utils import first_non_empty
 
@@ -200,3 +204,19 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
         }
 
         return render_to_string(self.template_name, context)
+
+
+class DraftailJSRenderMixin(DraftailRichTextArea):
+    template_name = 'wagtailmodelchoosers/widgets/draftail_rich_text_area.html'
+
+    @cached_property
+    def media(self):
+        return super().media +\
+               Media(js=[versioned_static('wagtailmodelchoosers/draftailmodelchoosers.js')])
+
+    def get_context(self, *args, **kwargs):
+        context = super().get_context(*args, **kwargs)
+        entity_types = getattr(settings, 'MODEL_CHOOSER_DRAFTAIL_ENTITY_TYPES', {})
+        field = 'type'
+        context['entity_types'] = json.dumps([e[field] for e in entity_types if field in e])
+        return context
