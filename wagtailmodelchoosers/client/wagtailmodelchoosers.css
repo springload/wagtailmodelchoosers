@@ -10,6 +10,7 @@
     z-index: 1300;
     overflow-x: hidden;
     overflow-y: hidden;
+    pointer-events: auto;/* Draftail sets us to readonly with this - needs to be disabled */
 }
 
 .admin-modal__header {
