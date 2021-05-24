@@ -6,7 +6,7 @@ from wagtailmodelchoosers.widgets import ModelChooserWidget, RemoteModelChooserW
 
 
 class BaseModelChooserPanel(BaseChooserPanel):
-    object_type_name = 'model'
+    object_type_name = "model"
 
     @cached_classmethod
     def target_model(cls):
@@ -42,32 +42,36 @@ class ModelChooserPanel(object):
 
         self.field_name = field_name
         self.chooser = chooser
-        self.label = options.pop('label', chooser)
-        self.display = options.pop('display', 'title')
-        self.list_display = options.pop('list_display', list(flatten([self.display])))
-        self.filters = options.pop('filters', [])
-        self.page_size_param = options.pop('page_size_param', None)
-        self.page_size = options.pop('page_size', None)
-        self.pk_name = options.pop('pk_name', 'uuid')
-        self.translations = options.pop('translations', [])
+        self.label = options.pop("label", chooser)
+        self.display = options.pop("display", "title")
+        self.list_display = options.pop("list_display", list(flatten([self.display])))
+        self.filters = options.pop("filters", [])
+        self.page_size_param = options.pop("page_size_param", None)
+        self.page_size = options.pop("page_size", None)
+        self.pk_name = options.pop("pk_name", "uuid")
+        self.translations = options.pop("translations", [])
 
     def bind_to_model(self, model):
-        return type(str('_ModelChooserPanel'), (BaseModelChooserPanel,), {
-            'model': model,
-            'field_name': self.field_name,
-            'label': self.label,
-            'display': self.display,
-            'list_display': self.list_display,
-            'filters': self.filters,
-            'page_size_param': self.page_size_param,
-            'page_size': self.page_size,
-            'pk_name': self.pk_name,
-            'translations': self.translations,
-        })
+        return type(
+            str("_ModelChooserPanel"),
+            (BaseModelChooserPanel,),
+            {
+                "model": model,
+                "field_name": self.field_name,
+                "label": self.label,
+                "display": self.display,
+                "list_display": self.list_display,
+                "filters": self.filters,
+                "page_size_param": self.page_size_param,
+                "page_size": self.page_size,
+                "pk_name": self.pk_name,
+                "translations": self.translations,
+            },
+        )
 
 
 class BaseRemoteModelChooserPanel(BaseChooserPanel):
-    object_type_name = 'remote_model'
+    object_type_name = "remote_model"
 
     @classmethod
     def get_required(cls):
@@ -100,28 +104,32 @@ class RemoteModelChooserPanel(object):
 
         self.field_name = field_name
         self.chooser = chooser
-        self.label = options.pop('label', chooser)
-        self.display = options.pop('display', 'title')
-        self.list_display = options.pop('list_display', list(flatten([self.display])))
-        self.filters = options.pop('filters', [])
-        self.page_size_param = options.pop('page_size_param', None)
-        self.page_size = options.pop('page_size', None)
-        self.fields_to_save = options.pop('fields_to_save', None)
-        self.pk_name = options.pop('pk_name', 'uuid')
-        self.translations = options.pop('translations', [])
+        self.label = options.pop("label", chooser)
+        self.display = options.pop("display", "title")
+        self.list_display = options.pop("list_display", list(flatten([self.display])))
+        self.filters = options.pop("filters", [])
+        self.page_size_param = options.pop("page_size_param", None)
+        self.page_size = options.pop("page_size", None)
+        self.fields_to_save = options.pop("fields_to_save", None)
+        self.pk_name = options.pop("pk_name", "uuid")
+        self.translations = options.pop("translations", [])
 
     def bind_to_model(self, model):
-        return type(str('_RemoteModelChooserPanel'), (BaseRemoteModelChooserPanel,), {
-            'model': model,
-            'field_name': self.field_name,
-            'chooser': self.chooser,
-            'label': self.label,
-            'display': self.display,
-            'list_display': self.list_display,
-            'filters': self.filters,
-            'page_size_param': self.page_size_param,
-            'page_size': self.page_size,
-            'fields_to_save': self.fields_to_save,
-            'pk_name': self.pk_name,
-            'translations': self.translations,
-        })
+        return type(
+            str("_RemoteModelChooserPanel"),
+            (BaseRemoteModelChooserPanel,),
+            {
+                "model": model,
+                "field_name": self.field_name,
+                "chooser": self.chooser,
+                "label": self.label,
+                "display": self.display,
+                "list_display": self.list_display,
+                "filters": self.filters,
+                "page_size_param": self.page_size_param,
+                "page_size": self.page_size,
+                "fields_to_save": self.fields_to_save,
+                "pk_name": self.pk_name,
+                "translations": self.translations,
+            },
+        )

@@ -22,7 +22,7 @@ def html_attributes(attrs, exclude=None):
     if exclude is None:
         exclude = []
     elif isinstance(exclude, str):
-        exclude = exclude.split(',')
+        exclude = exclude.split(",")
     exclude = list(map(lambda e: e.strip().lower(), exclude))
 
     html_attrs = []
@@ -37,6 +37,8 @@ def html_attributes(attrs, exclude=None):
 
         # Other attributes, display normally.
         else:
-            html_attrs.append('{key}="{val}"'.format(key=strip_tags(key), val=conditional_escape(val)))
+            html_attrs.append(
+                '{key}="{val}"'.format(key=strip_tags(key), val=conditional_escape(val))
+            )
 
-    return mark_safe(' '.join(html_attrs))
+    return mark_safe(" ".join(html_attrs))
