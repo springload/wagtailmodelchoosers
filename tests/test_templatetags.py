@@ -65,6 +65,6 @@ class HTMLAttributesTestCase(TestCase):
 
     def test_html_attributes_escapes_values(self):
         attrs = {'value': '<>&\'"'}
-        expected_output = 'value="&lt;&gt;&amp;&#39;&quot;"'
+        expected_output = 'value="&lt;&gt;&amp;&#x27;&quot;"'
 
         self.assertEqual(html_attributes(attrs), expected_output)
