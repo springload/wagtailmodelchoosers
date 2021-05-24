@@ -7,7 +7,7 @@ from codecs import open
 from wagtailmodelchoosers import __version__
 
 try:
-    from setuptools import setup, find_packages
+    from setuptools import find_packages, setup
 except ImportError:
     from distutils.core import setup
 
@@ -25,7 +25,7 @@ testing_extras = [
     # For coverage and PEP8 linting
     'coverage==5.5',
     'flake8==3.9.2',
-    #'flake8-colors>=0.1.9,<1',
+    # 'flake8-colors>=0.1.9,<1',
     'isort==5.8.0',
 ]
 
