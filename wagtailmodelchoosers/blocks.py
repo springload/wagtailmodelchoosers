@@ -3,7 +3,6 @@ import json
 from django import forms
 from django.apps import apps
 from django.utils.functional import cached_property
-
 from wagtail.core.blocks import ChooserBlock
 
 from wagtailmodelchoosers.utils import first_non_empty, flatten, get_chooser_options

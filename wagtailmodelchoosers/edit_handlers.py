@@ -1,5 +1,5 @@
-from wagtail.utils.decorators import cached_classmethod
 from wagtail.admin.edit_handlers import BaseChooserPanel
+from wagtail.utils.decorators import cached_classmethod
 
 from wagtailmodelchoosers.utils import flatten, get_chooser_options
 from wagtailmodelchoosers.widgets import ModelChooserWidget, RemoteModelChooserWidget

@@ -3,14 +3,12 @@ import uuid
 
 from django.apps import apps
 from django.conf import settings
-from django.forms import widgets, Media
-
+from django.forms import Media, widgets
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
-
-from wagtail.utils.widgets import WidgetWithScript
 from wagtail.admin.rich_text.editors.draftail import DraftailRichTextArea
 from wagtail.admin.staticfiles import versioned_static
+from wagtail.utils.widgets import WidgetWithScript
 
 from .utils import first_non_empty
 
