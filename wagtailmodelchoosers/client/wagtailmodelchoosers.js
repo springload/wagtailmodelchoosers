@@ -25,7 +25,6 @@ const initRemoteModelChooser = (id, data) => {
     const control = item.querySelector('[data-remote-model-chooser-mount]');
     ReactDOM.render(<RemoteModelChooser input={input} options={data} />, control);
   }
-
 };
 
 window.wagtailModelChoosers = {};
@@ -35,9 +34,9 @@ window.wagtailModelChoosers.initRemoteModelChooser = initRemoteModelChooser;
 export default ModelChooser;
 
 export {
-    BaseChooser,
-    ModelPicker,
-    RemoteModelChooser,
-    initModelChooser,
-    initRemoteModelChooser,
+  BaseChooser,
+  ModelPicker,
+  RemoteModelChooser,
+  initModelChooser,
+  initRemoteModelChooser,
 };
