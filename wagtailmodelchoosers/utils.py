@@ -4,22 +4,11 @@ import copy
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
-try:
-    basestring  # noqa: F821
-except NameError:
-    # Python 3
-    def is_list(obj):
-        return isinstance(obj, collections.Sequence) and not isinstance(
-            obj, (str, bytes)
-        )
 
-
-else:
-    # Python 2
-    def is_list(obj):
-        return isinstance(obj, collections.Sequence) and not isinstance(
-            obj, basestring
-        )  # noqa: F821
+def is_list(obj):
+    return isinstance(obj, collections.Sequence) and not isinstance(
+        obj, (str, bytes)
+    )
 
 
 def flatten(list_):
