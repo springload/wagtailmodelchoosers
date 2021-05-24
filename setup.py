@@ -20,7 +20,7 @@ install_requires = [
 # Testing dependencies
 testing_extras = [
     # Required for running the tests
-    'tox==2.23.1',
+    'tox==3.23.1',
 
     # For coverage and PEP8 linting
     'coverage==5.5',
