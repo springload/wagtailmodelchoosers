@@ -25,16 +25,6 @@ const modelChooserDraftailInit = (modelChooserEntityTypes, draftailOptions, widg
     window.draftail.registerPlugin(plugin);
   });
 
-  // Go through all draftail entities and for all the modelchooser ones, make the icon name
-  // into a <span> tag and put the 'icon' string into the class.  This is the only way
-  // to get fontawesome icons working in draftail, which expects SVG icons.
-  draftailOptions.entityTypes = draftailOptions.entityTypes.map((et) => {
-    const _icon = modelChooserEntityTypes.includes(et.type)
-      ? window.React.createElement('span', { class: `icon ${et.icon}` })
-      : et.icon;
-    return Object.assign(et, { icon: _icon, icon_name: et.icon });
-  });
-
   window.draftail.initEditor(widgetAttrIds, draftailOptions, document.currentScript);
 };
 
