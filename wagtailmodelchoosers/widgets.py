@@ -10,7 +10,7 @@ from wagtail.admin.rich_text.editors.draftail import DraftailRichTextArea
 from wagtail.admin.staticfiles import versioned_static
 from wagtail.utils.widgets import WidgetWithScript
 
-from .utils import first_non_empty
+from .utils import first_non_empty, get_all_chooser_options
 
 
 class ModelChooserWidget(WidgetWithScript, widgets.Input):
@@ -222,9 +222,7 @@ class DraftailJSRenderMixin(DraftailRichTextArea):
 
     def get_context(self, *args, **kwargs):
         context = super().get_context(*args, **kwargs)
-        entity_types = getattr(settings, "MODEL_CHOOSER_DRAFTAIL_ENTITY_TYPES", {})
-        field = "type"
-        context["entity_types"] = json.dumps(
-            [e[field] for e in entity_types if field in e]
-        )
+        f = "draftail_type"
+        met = [c[f] for c in get_all_chooser_options().values() if f in c]
+        context["modelchooser_entity_types"] = json.dumps(met)
         return context

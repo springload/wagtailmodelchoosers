@@ -6,9 +6,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 
 def is_list(obj):
-    return isinstance(obj, collections.Sequence) and not isinstance(
-        obj, (str, bytes)
-    )
+    return isinstance(obj, collections.Sequence) and not isinstance(obj, (str, bytes))
 
 
 def flatten(list_):
@@ -66,6 +64,11 @@ def get_chooser_options(chooser):
             )
 
     return copy.deepcopy(chooser_options)
+
+
+def get_all_chooser_options():
+    choosers_options = getattr(settings, "MODEL_CHOOSERS_OPTIONS", {})
+    return {c: get_chooser_options(c) for c in choosers_options.keys()}
 
 
 def first_non_empty(data_or_instance, field_or_fields, default=None):

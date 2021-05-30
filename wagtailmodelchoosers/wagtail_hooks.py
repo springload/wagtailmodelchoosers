@@ -7,6 +7,8 @@ from wagtail.core import hooks
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
 
+from .utils import get_all_chooser_options
+
 
 @hooks.register("insert_editor_css")
 def wagtailmodelchoosers_admin_css():
@@ -48,12 +50,17 @@ def wagtailmodelchoosers_admin_urls():
 
 @hooks.register("register_rich_text_features")
 def register_rich_text_features(features):
-    entity_types = getattr(settings, "MODEL_CHOOSER_DRAFTAIL_ENTITY_TYPES", {})
-    for entity_type in entity_types:
-        type_ = entity_type.get("type", None)
-        if not type_:
+    choosers = get_all_chooser_options()
+    for name, chooser in choosers.items():
+        draftail_type = chooser.get("draftail_type", None)
+        if not draftail_type:
             continue
 
-        features.default_features.append(type_)
-        feature = draftail_features.EntityFeature(entity_type)
-        features.register_editor_plugin("draftail", type_, feature)
+        # If there's no content_type then it's a remote chooser, and
+        # content_type means the name of the chooser instead of the model.
+        if "content_type" not in chooser:
+            chooser["content_type"] = name
+
+        chooser["type"] = draftail_type
+        feature = draftail_features.EntityFeature(chooser)
+        features.register_editor_plugin("draftail", name, feature)
