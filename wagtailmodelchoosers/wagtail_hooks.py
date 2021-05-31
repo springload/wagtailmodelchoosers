@@ -3,7 +3,10 @@ from django.conf import settings
 from django.conf.urls import url
 from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
+from draftjs_exporter.dom import DOM
+from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 from wagtail.core import hooks
+from wagtail.core.rich_text import LinkHandler
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
 
@@ -48,6 +51,22 @@ def wagtailmodelchoosers_admin_urls():
     ]
 
 
+# Handlers for converting to and from wagtail database format
+def make_handlers(name, draftail_type):
+    class Handler(InlineEntityElementHandler):
+        mutability = "IMMUTABLE"
+
+        def get_attribute_data(self, attrs):
+            return {"id": attrs[f"data-{name}"]}
+
+    def decorator(props):
+        return DOM.create_element(
+            "span", {f"data-{name}": props["id"]}, props["children"]
+        )
+
+    return Handler(draftail_type), decorator
+
+
 @hooks.register("register_rich_text_features")
 def register_rich_text_features(features):
     choosers = get_all_chooser_options()
@@ -64,3 +83,14 @@ def register_rich_text_features(features):
         chooser["type"] = draftail_type
         feature = draftail_features.EntityFeature(chooser)
         features.register_editor_plugin("draftail", name, feature)
+
+        _from, _to = make_handlers(name, draftail_type)
+
+        features.register_converter_rule(
+            "contentstate",
+            name,
+            {
+                "from_database_format": {f"span[data-{name}]": _from},
+                "to_database_format": {"entity_decorators": {draftail_type: _to}},
+            },
+        )
