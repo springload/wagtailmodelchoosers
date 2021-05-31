@@ -53,6 +53,39 @@ To select a model from a remote API, respectively use ``RemoteModelChooserBlock`
 
 If you have `WagtailDraftail <https://github.com/springload/wagtaildraftail>`_ installed, it will automatically register the ``ModelSource`` and ``RemoteModelSource`` to the JS. Refer to ``WagtailDraftail``'s `documentation <https://github.com/springload/wagtaildraftail#configuration>`_ to hook it up properly.
 
+If you want your choosers to be available in draftail, put a unique 'draftail_type' into each chooser configuration, then put the DraftailJSRenderMixin into the Draftail rich text area widget class in your project.  If you're on default wagtail, you can do that in settings/base.py like this:
+
+.. code:: python
+
+    WAGTAILADMIN_RICH_TEXT_EDITORS = {
+        "default": {
+            "WIDGET": "myproject.widgets.MyNewDraftailRichTextArea"
+        }
+    }
+
+Then in myproject.widgets do this:
+
+.. code:: python
+
+    from wagtailmodelchoosers.widgets import DraftailJSRenderMixin
+
+    class MyNewDraftailRichTextArea(DraftailJSRenderMixin, DraftailRichTextArea):
+        pass
+
+Now the modelchoosers you define in ``MODEL_CHOOSER_OPTIONS`` (format described in next section) in your project settings are available as features in your rich text blocks, and you can pass them like this:
+
+.. code:: python
+
+    rich_text_block = RichTextBlock(features="mymodel")
+
+If you want some of your models to be available in your rich text toolbar by default (so you don't have to construct feature lists), go to myproject.wagtail_hooks.py and add this for each model you want to be available:
+
+.. code:: python
+
+    @hooks.register("register_rich_text_features")
+    def register_rich_text_features(features):
+        features.default_features.append("mymodel")
+
 Configuration
 ~~~~~~~~~~~~~
 
@@ -75,9 +108,10 @@ The ModelChooser and RemoteModelChooser share a similar base configuration and o
             'fields_to_save': ['id'] + RATE_CHOOSER_DISPLAY_FIELDS,  # ONLY FOR REMOTE: The remote objects fields to save to the DB. Leave empty to save the whole object.
             'remote_endpoint': 'http://...'                          # ONLY FOR REMOTE: The remote API endpoint.
             'pk_name': 'uuid',                                       # The primary key name of the model
+            'draftail_type': 'NAV',                                  # Only add this if you want the model available in draftail.  Must be unique.
         }
     }
-    
+
 In addition, you can customise the mapping of the key of the API, see the configuration key names being used for the `query <https://github.com/springload/wagtailmodelchoosers/blob/c36bb877eef4ac4af6b221f0d7ff7416354754c7/wagtailmodelchoosers/utils.py#L107-L112>`_ and the `response <https://github.com/springload/wagtailmodelchoosers/blob/c36bb877eef4ac4af6b221f0d7ff7416354754c7/wagtailmodelchoosers/utils.py#L115-L123>`_.
 
 
