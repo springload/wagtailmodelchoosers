@@ -4,9 +4,14 @@ from django.conf.urls import url
 from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
 from draftjs_exporter.dom import DOM
-from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
-from wagtail.core import hooks
+from wagtail.admin.rich_text.converters import html_to_contentstate
+from wagtail.admin.rich_text.editors.draftail import (
+    DraftailRichTextArea,
+    DraftailRichTextAreaAdapter,
+)
+from wagtail.core import hooks, telepath
 from wagtail.core.rich_text import LinkHandler
+from wagtail.core.widget_adapters import WidgetAdapter
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
 
@@ -53,7 +58,7 @@ def wagtailmodelchoosers_admin_urls():
 
 # Handlers for converting to and from wagtail database format
 def make_handlers(name, draftail_type):
-    class Handler(InlineEntityElementHandler):
+    class Handler(html_to_contentstate.InlineEntityElementHandler):
         mutability = "IMMUTABLE"
 
         def get_attribute_data(self, attrs):
@@ -94,3 +99,25 @@ def register_rich_text_features(features):
                 "to_database_format": {"entity_decorators": {draftail_type: _to}},
             },
         )
+
+
+class ModelChooserDraftailRichTextAreaAdapter(DraftailRichTextAreaAdapter):
+    js_constructor = "modelChooserDraftailInit"
+
+    class Media:
+        js = ["wagtailmodelchoosers/draftailmodelchoosers.js"]
+
+    def js_args(self, *args, **kwargs):
+        js_args = super().js_args(*args, **kwargs)
+
+        # Give it all draftail types to register
+        f = "draftail_type"
+        js_args.append([c[f] for c in get_all_chooser_options().values() if f in c])
+
+        # Upstream's JS constructor to call with options
+        js_args.append(super().js_constructor)
+
+        return js_args
+
+
+telepath.register(ModelChooserDraftailRichTextAreaAdapter(), DraftailRichTextArea)

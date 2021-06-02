@@ -3,7 +3,7 @@ import DefaultDecorator from './DefaultDecorator';
 
 const WrapDecorator = (entityData, decorator) => (...args) => decorator(entityData, ...args);
 
-const modelChooserDraftailInit = (modelChooserEntityTypes, draftailOptions, widgetAttrIds) => {
+const modelChooserDraftailInit = (draftailOptions, modelChooserEntityTypes, constructor) => {
   // Save entities for decorators to use.  Doing this because I can't find a way to get entity type
   // data from within a decorator without saving it to contentstate, which ends up getting saved
   // to DB, which is unnecessary and breaks historical data.
@@ -25,7 +25,7 @@ const modelChooserDraftailInit = (modelChooserEntityTypes, draftailOptions, widg
     window.draftail.registerPlugin(plugin);
   });
 
-  window.draftail.initEditor(widgetAttrIds, draftailOptions, document.currentScript);
+  return new window.telepath.constructors[constructor](draftailOptions);
 };
 
-window.modelChooserDraftailInit = modelChooserDraftailInit;
+window.telepath.register('modelChooserDraftailInit', modelChooserDraftailInit);
