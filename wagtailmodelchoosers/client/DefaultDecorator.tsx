@@ -1,9 +1,10 @@
+import { ContentState } from "draft-js";
 import React from "react";
 
 type Props = {
-    entityKey: string;
-    contentState: any;
-    children: React.ReactNode;
+    entityKey?: string;
+    contentState: ContentState;
+    children?: React.ReactNode;
 };
 
 const DefaultDecorator = (entityData: any, props: Props) => {

@@ -1,14 +1,14 @@
 import React from "react";
 import "../polyfills";
-import { Modifier, EditorState } from "draft-js";
+import { Modifier, EditorState, Entity } from "draft-js";
 import ModelPicker from "../components/ModelPicker";
 
 const API_BASE_URL = "/admin/modelchoosers/api/v1";
 
 type Props = {
-    editorState: any;
+    editorState: EditorState;
     options: any;
-    entity?: any;
+    entity?: Entity;
     onClose: () => void;
     onUpdate: () => void;
     onComplete: (nextState: any) => void;

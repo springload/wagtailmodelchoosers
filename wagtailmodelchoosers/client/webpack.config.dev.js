@@ -9,7 +9,7 @@ module.exports = {
     wagtailmodelchoosers:
       "./wagtailmodelchoosers/client/wagtailmodelchoosers.tsx",
     draftailmodelchoosers:
-      "./wagtailmodelchoosers/client/draftailmodelchoosers.js",
+      "./wagtailmodelchoosers/client/draftailmodelchoosers.tsx",
     polyfills: "./wagtailmodelchoosers/client/polyfills.js",
   },
   output: {
