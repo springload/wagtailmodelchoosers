@@ -7,7 +7,7 @@ from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters import html_to_contentstate
 from wagtail.admin.rich_text.editors.draftail import (
     DraftailRichTextArea,
-    DraftailRichTextAreaAdapter,
+#    DraftailRichTextAreaAdapter,
 )
 from wagtail.core import hooks, telepath
 from wagtail.core.rich_text import LinkHandler
@@ -101,23 +101,23 @@ def register_rich_text_features(features):
         )
 
 
-class ModelChooserDraftailRichTextAreaAdapter(DraftailRichTextAreaAdapter):
-    js_constructor = "modelChooserDraftailInit"
+#class ModelChooserDraftailRichTextAreaAdapter(DraftailRichTextAreaAdapter):
+#    js_constructor = "modelChooserDraftailInit"
 
-    class Media:
-        js = ["wagtailmodelchoosers/draftailmodelchoosers.js"]
+#    class Media:
+#        js = ["wagtailmodelchoosers/draftailmodelchoosers.js"]
 
-    def js_args(self, *args, **kwargs):
-        js_args = super().js_args(*args, **kwargs)
+#    def js_args(self, *args, **kwargs):
+#        js_args = super().js_args(*args, **kwargs)
 
         # Give it all draftail types to register
-        f = "draftail_type"
-        js_args.append([c[f] for c in get_all_chooser_options().values() if f in c])
+#        f = "draftail_type"
+#        js_args.append([c[f] for c in get_all_chooser_options().values() if f in c])
 
         # Upstream's JS constructor to call with options
-        js_args.append(super().js_constructor)
+#        js_args.append(super().js_constructor)
 
-        return js_args
+#        return js_args
 
 
-telepath.register(ModelChooserDraftailRichTextAreaAdapter(), DraftailRichTextArea)
+#telepath.register(ModelChooserDraftailRichTextAreaAdapter(), DraftailRichTextArea)
