@@ -9,7 +9,7 @@ from wagtail.admin.rich_text.editors.draftail import (
     DraftailRichTextArea,
 #    DraftailRichTextAreaAdapter,
 )
-from wagtail.core import hooks, telepath
+from wagtail.core import hooks
 from wagtail.core.rich_text import LinkHandler
 from wagtail.core.widget_adapters import WidgetAdapter
 
