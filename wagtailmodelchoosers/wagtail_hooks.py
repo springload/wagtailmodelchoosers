@@ -10,7 +10,7 @@ from wagtail.admin.rich_text.editors.draftail import (
 #    DraftailRichTextAreaAdapter,
 )
 from wagtail.core import hooks
-from wagtail.core.rich_text import LinkHandler
+from wagtail.core.rich_text import PageLinkHandler
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
 
