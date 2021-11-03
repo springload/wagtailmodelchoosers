@@ -6,7 +6,6 @@ from django.utils.html import format_html, format_html_join
 from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 from wagtail.core import hooks
-from wagtail.core.rich_text import LinkHandler
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
 

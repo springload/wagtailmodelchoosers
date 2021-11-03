@@ -7,7 +7,6 @@ from django.forms import Media, widgets
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from wagtail.admin.rich_text.editors.draftail import DraftailRichTextArea
-from wagtail.admin.staticfiles import versioned_static
 from wagtail.utils.widgets import WidgetWithScript
 
 from .utils import first_non_empty, get_all_chooser_options
@@ -217,7 +216,7 @@ class DraftailJSRenderMixin(DraftailRichTextArea):
     @cached_property
     def media(self):
         return super().media + Media(
-            js=[versioned_static("wagtailmodelchoosers/draftailmodelchoosers.js")]
+            js=["wagtailmodelchoosers/draftailmodelchoosers.js"]
         )
 
     def get_context(self, *args, **kwargs):
