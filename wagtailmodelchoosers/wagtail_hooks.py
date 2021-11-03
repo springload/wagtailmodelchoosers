@@ -57,11 +57,11 @@ def make_handlers(name, draftail_type):
         mutability = "IMMUTABLE"
 
         def get_attribute_data(self, attrs):
-            return {"id": attrs[f"data-{name}"]}
+            return {"id": attrs["data-{name}".format(name=name)]}
 
     def decorator(props):
         return DOM.create_element(
-            "span", {f"data-{name}": props["id"]}, props["children"]
+            "span", {"data-{name}".format(name=name): props["id"]}, props["children"]
         )
 
     return Handler(draftail_type), decorator
@@ -90,7 +90,7 @@ def register_rich_text_features(features):
             "contentstate",
             name,
             {
-                "from_database_format": {f"span[data-{name}]": _from},
+                "from_database_format": {"span[data-{name}]".format(name=name): _from},
                 "to_database_format": {"entity_decorators": {draftail_type: _to}},
             },
         )
