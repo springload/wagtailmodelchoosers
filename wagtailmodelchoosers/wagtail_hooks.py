@@ -5,13 +5,8 @@ from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
 from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters import html_to_contentstate
-from wagtail.admin.rich_text.editors.draftail import (
-    DraftailRichTextArea,
-    DraftailRichTextAreaAdapter,
-)
-from wagtail.core import hooks, telepath
-from wagtail.core.rich_text import LinkHandler
-from wagtail.core.widget_adapters import WidgetAdapter
+from wagtail.admin.rich_text.editors.draftail import DraftailRichTextArea
+from wagtail.core import hooks
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
 
@@ -101,23 +96,29 @@ def register_rich_text_features(features):
         )
 
 
-class ModelChooserDraftailRichTextAreaAdapter(DraftailRichTextAreaAdapter):
-    js_constructor = "modelChooserDraftailInit"
+try:
+    from wagtail.admin.rich_text.editors.draftail import DraftailRichTextAreaAdapter
+    from wagtail.core import telepath
 
-    class Media:
-        js = ["wagtailmodelchoosers/draftailmodelchoosers.js"]
+    class ModelChooserDraftailRichTextAreaAdapter(DraftailRichTextAreaAdapter):
+        js_constructor = "modelChooserDraftailInit"
 
-    def js_args(self, *args, **kwargs):
-        js_args = super().js_args(*args, **kwargs)
+        class Media:
+            js = ["wagtailmodelchoosers/draftailmodelchoosers.js"]
 
-        # Give it all draftail types to register
-        f = "draftail_type"
-        js_args.append([c[f] for c in get_all_chooser_options().values() if f in c])
+        def js_args(self, *args, **kwargs):
+            js_args = super().js_args(*args, **kwargs)
 
-        # Upstream's JS constructor to call with options
-        js_args.append(super().js_constructor)
+            # Give it all draftail types to register
+            f = "draftail_type"
+            js_args.append([c[f] for c in get_all_chooser_options().values() if f in c])
 
-        return js_args
+            # Upstream's JS constructor to call with options
+            js_args.append(super().js_constructor)
 
+            return js_args
 
-telepath.register(ModelChooserDraftailRichTextAreaAdapter(), DraftailRichTextArea)
+    telepath.register(ModelChooserDraftailRichTextAreaAdapter(), DraftailRichTextArea)
+
+except ImportError:
+    pass
