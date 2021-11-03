@@ -1,6 +1,7 @@
 import requests
 from django.apps import apps
 from django.db.models import CharField, Q
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, serializers
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.mixins import ListModelMixin
@@ -20,13 +21,13 @@ class ModelView(ListModelMixin, GenericViewSet):
     pagination_class = GenericModelPaginator
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
 
     def get_params(self):
-        return self.request.parser_context.get('kwargs')
+        return self.request.parser_context.get("kwargs")
 
     def do_search(self, cls, queryset):
-        search = self.request.query_params.get('search', None)
+        search = self.request.query_params.get("search", None)
         if not search:
             return queryset
 
@@ -34,7 +35,7 @@ class ModelView(ListModelMixin, GenericViewSet):
         for field in cls._meta.get_fields():
             if isinstance(field, CharField):
                 kwargs = {}
-                param_name = '%s__icontains' % field.name
+                param_name = "%s__icontains" % field.name
                 kwargs[param_name] = search
                 queries.append(Q(**kwargs))
 
@@ -49,11 +50,11 @@ class ModelView(ListModelMixin, GenericViewSet):
             return queryset
 
     def do_filter(self, cls, queryset):
-        for field in getattr(cls, 'rest_framework_filter_fields', []):
+        for field in getattr(cls, "rest_framework_filter_fields", []):
             value = self.request.query_params.get(field, None)
             if value is not None:
                 kwargs = {}
-                param_name = '%s' % field
+                param_name = "%s" % field
                 kwargs[param_name] = value
                 queryset = queryset.filter(**kwargs)
 
@@ -61,8 +62,8 @@ class ModelView(ListModelMixin, GenericViewSet):
 
     def get_queryset(self):
         params = self.get_params()
-        app_name = params.get('app_name')
-        model_name = params.get('model_name')
+        app_name = params.get("app_name")
+        model_name = params.get("model_name")
         cls = apps.get_model(app_name, model_name)
 
         queryset = cls.objects.all()
@@ -73,8 +74,8 @@ class ModelView(ListModelMixin, GenericViewSet):
 
     def get_serializer_class(self):
         params = self.get_params()
-        app_name = params.get('app_name')
-        model_name = params.get('model_name')
+        app_name = params.get("app_name")
+        model_name = params.get("model_name")
 
         cls = apps.get_model(app_name, model_name)
         return self.build_serializer(cls, model_name)
@@ -84,15 +85,15 @@ class ModelView(ListModelMixin, GenericViewSet):
         Dynamically build a model serializer class
         """
         class_name = "%sSerializer" % model_name
-        meta_class = type('Meta', (), {'model': cls, 'fields': '__all__'})
-        serializer_args = {'Meta': meta_class}
+        meta_class = type("Meta", (), {"model": cls, "fields": "__all__"})
+        serializer_args = {"Meta": meta_class}
 
-        if hasattr(cls, 'content_type'):
-            serializer_args.update({
-                'content_type': serializers.StringRelatedField()
-            })
+        if hasattr(cls, "content_type"):
+            serializer_args.update({"content_type": serializers.StringRelatedField()})
 
-        model_serializer = type(class_name, (serializers.ModelSerializer,), serializer_args)
+        model_serializer = type(
+            class_name, (serializers.ModelSerializer,), serializer_args
+        )
 
         return model_serializer
 
@@ -100,14 +101,14 @@ class ModelView(ListModelMixin, GenericViewSet):
 class RemoteResourceView(ViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
-    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,)
-    http_method_names = ('get', 'head', 'options')
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    http_method_names = ("get", "head", "options")
 
     def get_params(self):
-        return self.request.parser_context.get('kwargs')
+        return self.request.parser_context.get("kwargs")
 
     def get_remote_url(self, chooser_options):
-        url = chooser_options['remote_endpoint']
+        url = chooser_options["remote_endpoint"]
         url_params = {}
 
         # Apply options.
@@ -118,12 +119,12 @@ class RemoteResourceView(ViewSet):
                 url_params[remote_key] = value
 
         # Apply filters.
-        query_filters = chooser_options.get('filters', [])
+        query_filters = chooser_options.get("filters", [])
         for filter_ in query_filters:
             # Use the value from the url params, not from the options in case the front-end modified it.
-            value = self.request.query_params.get(filter_['field'])
+            value = self.request.query_params.get(filter_["field"])
             if value is not None:
-                url_params[filter_['field']] = value
+                url_params[filter_["field"]] = value
 
         return url, url_params
 
@@ -132,10 +133,10 @@ class RemoteResourceView(ViewSet):
         response_keys_map = get_response_keys_map(chooser_options)
 
         # Always include the `results` and `page` keys.
-        requested_page = self.request.query_params.get('page', 1)
+        requested_page = self.request.query_params.get("page", 1)
         data = {
-            'results': response_data.get(response_keys_map['results']),
-            'page': int(response_data.get(response_keys_map['page'], requested_page))
+            "results": response_data.get(response_keys_map["results"]),
+            "page": int(response_data.get(response_keys_map["page"], requested_page)),
         }
 
         # Only include the other keys if they exists.
@@ -152,7 +153,7 @@ class RemoteResourceView(ViewSet):
 
     def list(self, request, *args, **kwargs):
         params = self.get_params()
-        chooser = params.get('chooser')
+        chooser = params.get("chooser")
         chooser_options = get_chooser_options(chooser)
 
         url, url_params = self.get_remote_url(chooser_options)
@@ -160,10 +161,7 @@ class RemoteResourceView(ViewSet):
         try:
             response.raise_for_status()
         except requests.HTTPError as e:
-            return Response({
-                'status_code': e.response.status_code,
-                'detail': str(e)
-            })
+            return Response({"status_code": e.response.status_code, "detail": str(e)})
 
         data = self.convert_response(response, chooser_options)
         return Response(data)

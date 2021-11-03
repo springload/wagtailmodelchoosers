@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "sourceMap": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+  },
+  "include": [
+    "./wagtailmodelchoosers/client/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

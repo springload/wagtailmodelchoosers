@@ -3,8 +3,7 @@ import json
 from django import forms
 from django.apps import apps
 from django.utils.functional import cached_property
-
-from wagtail.wagtailcore.blocks import ChooserBlock
+from wagtail.core.blocks import ChooserBlock
 
 from wagtailmodelchoosers.utils import first_non_empty, flatten, get_chooser_options
 from wagtailmodelchoosers.widgets import ModelChooserWidget, RemoteModelChooserWidget
@@ -16,15 +15,15 @@ class ModelChooserBlock(ChooserBlock):
         options.update(kwargs)
 
         self.chooser = chooser
-        self.content_type = options.pop('content_type')
-        self.label = options.pop('label', chooser)
-        self.display = options.pop('display', 'title')
-        self.list_display = options.pop('list_display', list(flatten([self.display])))
-        self.filters = options.pop('filters', [])
-        self.page_size_param = options.pop('page_size_param', None)
-        self.page_size = options.pop('page_size', None)
-        self.pk_name = options.pop('pk_name', 'uuid')
-        self.translations = options.pop('translations', [])
+        self.content_type = options.pop("content_type")
+        self.label = options.pop("label", chooser)
+        self.display = options.pop("display", "title")
+        self.list_display = options.pop("list_display", list(flatten([self.display])))
+        self.filters = options.pop("filters", [])
+        self.page_size_param = options.pop("page_size_param", None)
+        self.page_size = options.pop("page_size", None)
+        self.pk_name = options.pop("pk_name", "uuid")
+        self.translations = options.pop("translations", [])
 
         super(ModelChooserBlock, self).__init__(**kwargs)
 
@@ -84,7 +83,7 @@ class ModelChooserBlock(ChooserBlock):
                 return None
 
     def render_basic(self, value, context=None):
-        return first_non_empty(value, self.display, default='')
+        return first_non_empty(value, self.display, default="")
 
     class Meta:
         icon = "snippet"
@@ -96,24 +95,22 @@ class RemoteModelChooserBlock(ChooserBlock):
         options.update(kwargs)
 
         self.chooser = chooser
-        self.label = options.pop('label', chooser)
-        self.display = options.pop('display', 'title')
-        self.list_display = options.pop('list_display', list(flatten([self.display])))
-        self.filters = options.pop('filters', [])
-        self.page_size_param = options.pop('page_size_param', None)
-        self.page_size = options.pop('page_size', None)
-        self.fields_to_save = options.pop('fields_to_save', None)
-        self.pk_name = options.pop('pk_name', 'uuid')
-        self.translations = options.pop('translations', [])
+        self.label = options.pop("label", chooser)
+        self.display = options.pop("display", "title")
+        self.list_display = options.pop("list_display", list(flatten([self.display])))
+        self.filters = options.pop("filters", [])
+        self.page_size_param = options.pop("page_size_param", None)
+        self.page_size = options.pop("page_size", None)
+        self.fields_to_save = options.pop("fields_to_save", None)
+        self.pk_name = options.pop("pk_name", "uuid")
+        self.translations = options.pop("translations", [])
 
         super(RemoteModelChooserBlock, self).__init__(**options)
 
     @cached_property
     def field(self):
         return forms.CharField(
-            widget=self.widget,
-            required=self._required,
-            help_text=self._help_text
+            widget=self.widget, required=self._required, help_text=self._help_text
         )
 
     @cached_property
@@ -168,11 +165,11 @@ class RemoteModelChooserBlock(ChooserBlock):
         if isinstance(value, str):
             value = self.to_python(value)
 
-        return first_non_empty(value, self.display, default='')
+        return first_non_empty(value, self.display, default="")
 
     def clean(self, value):
         return value
 
     class Meta:
-        icon = 'snippet'
+        icon = "snippet"
         default = {}

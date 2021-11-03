@@ -1,34 +1,40 @@
-const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require("path");
+const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const outputPath = path.join(__dirname, '..', 'static', 'wagtailmodelchoosers');
+const outputPath = path.join(__dirname, "..", "static", "wagtailmodelchoosers");
 
 module.exports = {
   entry: {
-    wagtailmodelchoosers: './wagtailmodelchoosers/client/wagtailmodelchoosers.js',
-    polyfills: './wagtailmodelchoosers/client/polyfills.js',
+    wagtailmodelchoosers:
+      "./wagtailmodelchoosers/client/wagtailmodelchoosers.tsx",
+    draftailmodelchoosers:
+      "./wagtailmodelchoosers/client/draftailmodelchoosers.tsx",
+    polyfills: "./wagtailmodelchoosers/client/polyfills.js",
   },
   output: {
     path: outputPath,
-    filename: '[name].js',
+    filename: "[name].js",
   },
-  plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new ExtractTextPlugin('wagtailmodelchoosers.css'),
-  ],
+
+  devtool: "source-map",
+
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
+  },
+
+  plugins: [new webpack.NoEmitOnErrorsPlugin(), new MiniCssExtractPlugin()],
   module: {
     rules: [
+      { test: /\.tsx?$/, loader: "ts-loader" },
       {
         test: /\.js$/,
-        use: ['babel-loader'],
+        use: ["babel-loader"],
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          use: ['css-loader'],
-        }),
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
     ],
   },

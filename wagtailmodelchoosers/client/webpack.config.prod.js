@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 
 const config = require('./webpack.config.dev');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = Object.assign({}, config, {
   plugins: config.plugins.concat([
@@ -9,18 +10,23 @@ module.exports = Object.assign({}, config, {
         NODE_ENV: JSON.stringify('production'),
       },
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true,
-        warnings: false,
-      },
-      mangle: {
-        screw_ie8: true,
-      },
-      output: {
-        comments: false,
-        screw_ie8: true,
-      },
-    }),
   ]),
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compress: {
+            ie8: false,
+          },
+          mangle: {
+            ie8: false,
+          },
+          output: {
+            comments: false,
+            ie8: false,
+          },
+        },
+      }),
+    ],
+  }
 });

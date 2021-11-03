@@ -2,10 +2,10 @@ from __future__ import absolute_import, unicode_literals
 
 import uuid
 
-from django.test import TestCase
-from wagtail.wagtailcore.models import Page
-
 from core.models import SimplePage
+from django.test import TestCase
+from wagtail.core.models import Page
+
 from wagtailmodelchoosers import widgets
 
 
