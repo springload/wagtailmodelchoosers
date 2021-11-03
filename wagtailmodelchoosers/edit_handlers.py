@@ -67,7 +67,7 @@ class ModelChooserPanel(object):
                 "pk_name": self.pk_name,
                 "translations": self.translations,
             },
-        )
+        )(field_name=self.field_name)
 
 
 class BaseRemoteModelChooserPanel(BaseChooserPanel):
@@ -132,4 +132,4 @@ class RemoteModelChooserPanel(object):
                 "pk_name": self.pk_name,
                 "translations": self.translations,
             },
-        )
+        )(field_name=self.field_name)
