@@ -211,7 +211,6 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
 
 
 class DraftailJSRenderMixin(DraftailRichTextArea):
-    template_name = "wagtailmodelchoosers/widgets/draftail_rich_text_area.html"
 
     @cached_property
     def media(self):
@@ -219,9 +218,7 @@ class DraftailJSRenderMixin(DraftailRichTextArea):
             js=["wagtailmodelchoosers/draftailmodelchoosers.js"]
         )
 
-    def get_context(self, *args, **kwargs):
-        context = super().get_context(*args, **kwargs)
+    def render_js_init(self, id_, name, value, **kwargs):
         f = "draftail_type"
         met = [c[f] for c in get_all_chooser_options().values() if f in c]
-        context["modelchooser_entity_types"] = json.dumps(met)
-        return context
+        return "modelChooserDraftailInit({}, {}, '#{}');".format(json.dumps(met), json.dumps(self.options), id_)
