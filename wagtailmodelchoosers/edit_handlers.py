@@ -10,7 +10,7 @@ class BaseModelChooserPanel(BaseChooserPanel):
 
     @cached_classmethod
     def target_model(cls):
-        return cls.model._meta.get_field(cls.field_name).rel.to
+        return cls.model._meta.get_field(cls.field_name).remote_field.model
 
     @classmethod
     def get_required(cls):

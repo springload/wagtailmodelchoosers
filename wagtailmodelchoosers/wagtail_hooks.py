@@ -1,6 +1,6 @@
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from django.conf import settings
-from django.conf.urls import url
+from django.urls import re_path
 from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
 from django.utils.module_loading import import_string
@@ -38,12 +38,12 @@ def wagtailmodelchoosers_admin_js():
 @hooks.register("register_admin_urls")
 def wagtailmodelchoosers_admin_urls():
     return [
-        url(
+        re_path(
             r"^modelchoosers/api/v1/model/(?P<app_name>[\w-]+).(?P<model_name>\w+)",
             ModelView.as_view({"get": "list"}),
             name="wagtailmodelchoosers_api_model",
         ),
-        url(
+        re_path(
             r"^modelchoosers/api/v1/remote_model/(?P<chooser>[\w-]+)",
             RemoteResourceView.as_view({"get": "list"}),
             name="wagtailmodelchoosers_api_remote_model",
