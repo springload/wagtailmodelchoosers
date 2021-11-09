@@ -51,7 +51,7 @@ class ModelChooserPanel(object):
         self.pk_name = options.pop("pk_name", "uuid")
         self.translations = options.pop("translations", [])
 
-    def bind_to_model(self, model):
+    def bind_to(self, model):
         return type(
             str("_ModelChooserPanel"),
             (BaseModelChooserPanel,),
@@ -114,7 +114,7 @@ class RemoteModelChooserPanel(object):
         self.pk_name = options.pop("pk_name", "uuid")
         self.translations = options.pop("translations", [])
 
-    def bind_to_model(self, model):
+    def bind_to(self, model):
         return type(
             str("_RemoteModelChooserPanel"),
             (BaseRemoteModelChooserPanel,),
