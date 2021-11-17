@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls import url
 from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
+from django.utils.module_loading import import_string
 from draftjs_exporter.dom import DOM
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
 from wagtail.core import hooks
@@ -50,21 +51,28 @@ def wagtailmodelchoosers_admin_urls():
     ]
 
 
-# Handlers for converting to and from wagtail database format
-def make_handlers(name, draftail_type):
+def default_decorator(props):
+    children = props.pop("children")
+    return DOM.create_element("span", props, children)
+
+
+def wrap_dec(dec, matcher):
+    def inner(props):
+        el = dec(props)
+        el.attr.update({matcher: str(props["id"])})
+        return el
+    return inner
+
+
+def wrap_hand(matcher):
+
     class Handler(InlineEntityElementHandler):
         mutability = "IMMUTABLE"
 
         def get_attribute_data(self, attrs):
-            return {"id": attrs["data-{name}".format(name=name)]}
+            return { "id": attrs[matcher] }
 
-    def decorator(props):
-        return DOM.create_element(
-            "span", {"data-{name}".format(name=name): props["id"]}, props["children"]
-        )
-
-    return Handler(draftail_type), decorator
-
+    return Handler
 
 @hooks.register("register_rich_text_features")
 def register_rich_text_features(features):
@@ -83,13 +91,20 @@ def register_rich_text_features(features):
         feature = draftail_features.EntityFeature(chooser)
         features.register_editor_plugin("draftail", name, feature)
 
-        _from, _to = make_handlers(name, draftail_type)
+        decorator_path = getattr(settings, "DRAFT_EXPORTER_ENTITY_DECORATORS", {}).get(draftail_type, None)
+        decorator = None
+        if decorator_path:
+            decorator = import_string(decorator_path)
+        else:
+            decorator = default_decorator
+
+        matcher = "modelchooser_choice_{}".format(draftail_type.lower())
 
         features.register_converter_rule(
             "contentstate",
             name,
             {
-                "from_database_format": {"span[data-{name}]".format(name=name): _from},
-                "to_database_format": {"entity_decorators": {draftail_type: _to}},
+                "from_database_format": {"span[{}]".format(matcher): wrap_hand(matcher)(draftail_type)},
+                "to_database_format": {"entity_decorators": {draftail_type: wrap_dec(decorator, matcher)}},
             },
         )

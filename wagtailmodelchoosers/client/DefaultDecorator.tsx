@@ -18,10 +18,10 @@ const DefaultDecorator = (entityData: any, props: Props) => {
     const prefix = `#${id} ${prefixLabel} - `;
 
     return (
-        <span data-tooltip={entityKey} className="RichEditor-link">
+        <a class="TooltipEntity">
             {prefix}
             {children}
-        </span>
+        </a>
     );
 };
 
