@@ -18,7 +18,7 @@ const DefaultDecorator = (entityData: any, props: Props) => {
     const prefix = `#${id} ${prefixLabel} - `;
 
     return (
-        <a class="TooltipEntity">
+        <a className="TooltipEntity">
             {prefix}
             {children}
         </a>
