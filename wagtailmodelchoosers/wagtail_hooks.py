@@ -60,6 +60,7 @@ def wrap_dec(dec, matcher):
     def inner(props):
         el = dec(props)
         el.attr.update({matcher: str(props["id"])})
+        DOM.append_child(el, props["children"])
         return el
     return inner
 
