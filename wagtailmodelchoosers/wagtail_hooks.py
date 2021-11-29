@@ -59,8 +59,14 @@ def default_decorator(props):
 def wrap_dec(dec, matcher):
     def inner(props):
         el = dec(props)
+
+        # Append unique modelchooser identifier for from_database matching
         el.attr.update({matcher: str(props["id"])})
-        DOM.append_child(el, props["children"])
+
+        # If the decorator didn't append children, force it
+        if not el.children:
+            DOM.append_child(el, props["children"])
+
         return el
     return inner
 
