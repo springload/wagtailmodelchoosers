@@ -83,6 +83,7 @@ class ModelSource extends React.Component<Props, State> {
             ...fields,
             ...maybeContentType,
         };
+        console.log("nextData", nextData);
 
         const entityMutability = displayIsSelection ? "MUTABLE" : "IMMUTABLE";
         const entity = currentContent.createEntity(

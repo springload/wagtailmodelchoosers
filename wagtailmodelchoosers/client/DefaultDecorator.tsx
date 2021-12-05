@@ -16,11 +16,11 @@ const DefaultDecorator = (entityData: any, props: Props) => {
 
     const prefixLabel = entityData.prefix_label || "";
     const prefix = `#${id} ${prefixLabel} - `;
+    const decoratedText = entityData.decoratedText || "";
 
     return (
         <a className="TooltipEntity">
-            {prefix}
-            {children}
+            {prefix}{children}
         </a>
     );
 };
