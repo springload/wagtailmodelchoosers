@@ -48,7 +48,12 @@ def make_rewriter(t, expander):
 
         @classmethod
         def expand_db_attributes(cls, attrs):
-            return str(DOM.render(expander(attrs)))
+            elt = DOM.render(expander(attrs))
+            tag_spl = elt.rsplit("><", 1)
+            opening_tag = tag_spl[0]
+            if len(tag_spl) > 1:
+                opening_tag += ">"
+            return opening_tag
 
     return ModelLinkHandler
 
