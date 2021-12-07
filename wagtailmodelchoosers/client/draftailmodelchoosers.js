@@ -3,7 +3,7 @@ import DefaultDecorator from './DefaultDecorator';
 
 const WrapDecorator = (entityData, decorator) => (...args) => decorator(entityData, ...args);
 
-const modelChooserDraftailInit = (modelChooserEntityTypes, draftailOptions, widgetAttrIds) => {
+const modelChooserDraftailInit = (draftailOptions, modelChooserEntityTypes, constructor) => {
   console.log("modelChooserDraftailInit id: ", widgetAttrIds);
   console.log("modelChooserDraftailInit options: ", draftailOptions);
   console.log("modelChooserDraftailInit mc types: ", modelChooserEntityTypes);
@@ -29,7 +29,7 @@ const modelChooserDraftailInit = (modelChooserEntityTypes, draftailOptions, widg
     window.draftail.registerPlugin(plugin);
   });
 
-  window.draftail.initEditor(widgetAttrIds, draftailOptions, document.currentScript);
+  return new window.telepath.constructors[constructor](draftailOptions);
 };
 
-window.modelChooserDraftailInit = modelChooserDraftailInit;
+window.telepath.register('modelChooserDraftailInit', modelChooserDraftailInit);
