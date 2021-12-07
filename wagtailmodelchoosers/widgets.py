@@ -113,6 +113,7 @@ class ModelChooserWidget(WidgetWithScript, widgets.Input):
         return data
 
     def render_js_init(self, id_, name, value):
+        """Override for WidgetWithScript. (OLD WAY)"""
         data = self.get_js_init_data(id_, name, value)
         return "wagtailModelChoosers.initModelChooser({id_}, {data})".format(
             id_=json.dumps(id_), data=json.dumps(data)
@@ -168,6 +169,7 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
         return first_non_empty(value, self.display, default="")
 
     def get_internal_value(self, value):
+        print("get_internal_value", value)
         return json.dumps(value) if value else ""
 
     def format_value(self, value):
@@ -179,6 +181,7 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
         return json.dumps(value)
 
     def get_js_init_data(self, id_, name, value):
+        print("get_internal_value", value)
         data = {
             "label": self.label,
             "display": self.display,

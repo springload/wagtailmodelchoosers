@@ -51,3 +51,5 @@ export {
     initModelChooser,
     initRemoteModelChooser,
 };
+
+(window as any).telepath.register('initRemoteModelChooser', initRemoteModelChooser);

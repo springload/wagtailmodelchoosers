@@ -119,4 +119,34 @@ class ModelChooserDraftailRichTextAreaAdapter(DraftailRichTextAreaAdapter):
         return js_args
 
 
+
+class RemoteModelChooserWidgetAdapter(WidgetAdapter):
+    js_constructor = "initRemoteModelChooser"
+
+    class Media:
+        js = ["wagtailmodelchoosers/wagtailmodelchoosers.js"]
+
+    def js_args(self, widget):
+        js_args = super().js_args(widget)
+        return js_args
+
+        # Give it all draftail types to register
+        f = "draftail_type"
+        js_args.append([c[f] for c in get_all_chooser_options().values() if f in c])
+
+        # Upstream's JS constructor to call with options
+        js_args.append(super().js_constructor)
+
+
+        return [
+            # widget.render('__NAME__', None, attrs={'id': '__ID__'}),
+            # widget.id_for_label('__ID__'),
+        #     id
+        #     data
+        ]
+
+
+
 telepath.register(ModelChooserDraftailRichTextAreaAdapter(), DraftailRichTextArea)
+# telepath.register(ModelChooserWidgetAdapter(), ModelChooserWidget)
+# telepath.register(RemoteModelChooserWidgetAdapter(), RemoteModelChooserWidget)
