@@ -32,6 +32,8 @@ class FromDBHandler(InlineEntityElementHandler):
         label = self.attrs.get("label", None)
         if label:
             state.current_block.text = label
+        if not state.current_block.text:
+            state.current_block.text = "placeholder"
         return super().handle_endtag(name, state, contentstate)
 
 
@@ -66,7 +68,7 @@ def to_database_format(t):
         if "id" in props:
             props[ID_ATTR_NAME] = str(props["id"])
 
-        if "label" in props:
+        if props.get("label", None):
             children = []
 
         return DOM.create_element("a", props, children)
