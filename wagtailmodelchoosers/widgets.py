@@ -2,14 +2,12 @@ import json
 import uuid
 
 from django.apps import apps
-from django.conf import settings
 from django.forms import Media, widgets
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
-from wagtail.admin.rich_text.editors.draftail import DraftailRichTextArea
 from wagtail.utils.widgets import WidgetWithScript
 
-from .utils import first_non_empty, get_all_chooser_options
+from wagtailmodelchoosers.utils import first_non_empty
 
 
 class ModelChooserWidget(WidgetWithScript, widgets.Input):
@@ -172,6 +170,14 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
     def get_internal_value(self, value):
         return json.dumps(value) if value else ""
 
+    def format_value(self, value):
+        """
+        Return a value as it should appear when rendered in a template.
+        """
+        if value == '' or value is None:
+            return None
+        return json.dumps(value)
+
     def get_js_init_data(self, id_, name, value):
         data = {
             "label": self.label,
@@ -208,20 +214,3 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
         }
 
         return render_to_string(self.template_name, context)
-
-
-class DraftailJSRenderMixin(DraftailRichTextArea):
-    template_name = "wagtailmodelchoosers/widgets/draftail_rich_text_area.html"
-
-    @cached_property
-    def media(self):
-        return super().media + Media(
-            js=["wagtailmodelchoosers/draftailmodelchoosers.js"]
-        )
-
-    def get_context(self, *args, **kwargs):
-        context = super().get_context(*args, **kwargs)
-        f = "draftail_type"
-        met = [c[f] for c in get_all_chooser_options().values() if f in c]
-        context["modelchooser_entity_types"] = json.dumps(met)
-        return context

@@ -35,7 +35,7 @@ class BaseModelChooserPanel(BaseChooserPanel):
         }
 
 
-class ModelChooserPanel(object):
+class ModelChooserPanel(BaseModelChooserPanel):
     def __init__(self, field_name, chooser, **kwargs):
         options = get_chooser_options(chooser)
         options.update(kwargs)
@@ -51,7 +51,10 @@ class ModelChooserPanel(object):
         self.pk_name = options.pop("pk_name", "uuid")
         self.translations = options.pop("translations", [])
 
-    def bind_to(self, model):
+    def bind_to(self, model=None, instance=None, request=None, form=None):
+        if model is None and instance is not None and self.model is None:
+            model = instance._meta.model
+
         return type(
             str("_ModelChooserPanel"),
             (BaseModelChooserPanel,),

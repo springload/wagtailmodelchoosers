@@ -9,6 +9,9 @@ from wagtailmodelchoosers import blocks, widgets
 TEST_MODEL_CHOOSERS_OPTIONS = {
     'core_page': {
         'content_type': 'wagtailcore.Page',
+    },
+    'other_page': {
+        'content_type': 'wagtailcore.Page',
     }
 }
 
