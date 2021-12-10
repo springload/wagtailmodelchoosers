@@ -4,11 +4,15 @@ import DefaultDecorator from './DefaultDecorator';
 const WrapDecorator = (entityData, decorator) => (...args) => decorator(entityData, ...args);
 
 const modelChooserDraftailInit = (modelChooserEntityTypes, draftailOptions, widgetAttrIds) => {
+  console.log("modelChooserDraftailInit id: ", widgetAttrIds);
+  console.log("modelChooserDraftailInit options: ", draftailOptions);
+  console.log("modelChooserDraftailInit mc types: ", modelChooserEntityTypes);
+
   // Save entities for decorators to use.  Doing this because I can't find a way to get entity type
   // data from within a decorator without saving it to contentstate, which ends up getting saved
   // to DB, which is unnecessary and breaks historical data.
   const modelChooserDraftailEntities = Object.fromEntries(
-    draftailOptions.entityTypes
+    (draftailOptions.entityTypes || [])
       .filter(et => modelChooserEntityTypes.includes(et.type))
       .map(et => [et.type, et]),
   );
