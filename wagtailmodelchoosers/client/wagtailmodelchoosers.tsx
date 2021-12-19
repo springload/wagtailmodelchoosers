@@ -8,6 +8,22 @@ import ModelChooser from "./components/ModelChooser";
 import ModelPicker from "./components/ModelPicker";
 import RemoteModelChooser from "./components/RemoteModelChooser";
 
+const renderWhenReady = (remote, id, data) => {
+    const input = document.getElementById(id);
+
+    if ((input as any).value === "loading") {
+        setTimeout((() => renderWhenReady(remote, id, data)), 500);
+        return;
+    }
+
+    const remote_str = remote ? "remote-" : "";
+    const control = input.parentNode.querySelector(`[data-${remote_str}model-chooser-mount]`);
+    const comp = remote
+                 ? <RemoteModelChooser input={input} options={data} />
+                 : <ModelChooser input={input} options={data} />
+    ReactDOM.render(comp, control);
+};
+
 const initModelChooser = (id: string, data: any) => {
     console.log("initModelChooser id: ", id);
     console.log("initModelChooser data: ", data);
@@ -15,9 +31,7 @@ const initModelChooser = (id: string, data: any) => {
     const input = document.getElementById(id);
 
     if (input) {
-        const item = input.parentNode;
-        const control = item.querySelector("[data-model-chooser-mount]");
-        ReactDOM.render(<ModelChooser input={input} options={data} />, control);
+        renderWhenReady(false, id, data)
     }
 };
 
@@ -28,12 +42,7 @@ const initRemoteModelChooser = (id: string, data: any) => {
     const input = document.getElementById(id);
 
     if (input) {
-        const item = input.parentNode;
-        const control = item.querySelector("[data-remote-model-chooser-mount]");
-        ReactDOM.render(
-            <RemoteModelChooser input={input} options={data} />,
-            control
-        );
+        renderWhenReady(true, id, data)
     }
 };
 

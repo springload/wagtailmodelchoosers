@@ -4,7 +4,6 @@ import DefaultDecorator from './DefaultDecorator';
 const WrapDecorator = (entityData, decorator) => (...args) => decorator(entityData, ...args);
 
 const modelChooserDraftailInit = (draftailOptions, modelChooserEntityTypes, constructor) => {
-  console.log("modelChooserDraftailInit id: ", widgetAttrIds);
   console.log("modelChooserDraftailInit options: ", draftailOptions);
   console.log("modelChooserDraftailInit mc types: ", modelChooserEntityTypes);
 
@@ -19,6 +18,7 @@ const modelChooserDraftailInit = (draftailOptions, modelChooserEntityTypes, cons
 
   // Register all modelchooser entity plugins.
   modelChooserEntityTypes.forEach((entityType) => {
+    if (!modelChooserDraftailEntities[entityType]) return;
     const decorators = window.draftailDecorators || {};
     const decorator = decorators[entityType] || DefaultDecorator;
     const plugin = {
