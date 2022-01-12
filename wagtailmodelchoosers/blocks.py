@@ -25,6 +25,8 @@ class ModelChooserBlock(ChooserBlock):
         self.pk_name = options.pop("pk_name", "uuid")
         self.translations = options.pop("translations", [])
 
+        kwargs["icon"] = options.get("icon", kwargs["icon"])
+
         super(ModelChooserBlock, self).__init__(**kwargs)
 
     @cached_property
