@@ -25,6 +25,10 @@ class ModelChooserBlock(ChooserBlock):
         self.pk_name = options.pop("pk_name", "uuid")
         self.translations = options.pop("translations", [])
 
+        icon = options.get("icon", None)
+        if icon:
+            kwargs["icon"] = icon
+
         super(ModelChooserBlock, self).__init__(**kwargs)
 
     @cached_property
