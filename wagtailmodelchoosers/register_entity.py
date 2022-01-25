@@ -32,15 +32,6 @@ class FromDBHandler(InlineEntityElementHandler):
             extra = {"id": attrs[ENTITY_ID_ATTR_NAME]}
         return dict(attrs, **extra)
 
-    # Put the inner text into the label attr.
-    def handle_endtag(self, name, state, contentstate):
-        label = self.attrs.get("label", None)
-        if label:
-            state.current_block.text = label
-        if not state.current_block.text:
-            state.current_block.text = "placeholder"
-        return super().handle_endtag(name, state, contentstate)
-
 
 def default_expand_attrs(attrs):
     tag = DOM.create_element(ENTITY_TAG_NAME, attrs)
@@ -76,14 +67,11 @@ entity_rewriter = EntityLinkRewriter()
 
 def to_database_format(t):
     def inner(props):
-        children = props.pop("children", [])
+        children = props.pop("children", "")
 
         props[ENTITY_TYPE_ATTR_NAME] = t
         if "id" in props:
             props[ENTITY_ID_ATTR_NAME] = str(props["id"])
-
-        if props.get("label", None):
-            children = []
 
         return DOM.create_element(ENTITY_TAG_NAME, props, children)
     return inner
