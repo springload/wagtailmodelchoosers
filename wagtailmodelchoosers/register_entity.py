@@ -1,9 +1,12 @@
+import re
+
 from django.conf import settings
 from django.utils.module_loading import import_string
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from draftjs_exporter.dom import DOM
 from wagtail.core.rich_text import LinkHandler
 from wagtail.admin.rich_text.converters.html_to_contentstate import InlineEntityElementHandler
+from wagtail.core.rich_text.rewriters import extract_attrs
 
 
 """
@@ -12,22 +15,24 @@ think about from_database or to_database matching rules.  Also it wraps old styl
 into a link rewriter in a hacky way.
 """
 
-ID_ATTR_NAME = "modelchooser_id"
+
+ENTITY_TAG_NAME = "entity"
+ENTITY_ID_ATTR_NAME = ENTITY_TAG_NAME + "_id"
+ENTITY_TYPE_ATTR_NAME = ENTITY_TAG_NAME + "_type"
 
 
 class FromDBHandler(InlineEntityElementHandler):
     mutability = "IMMUTABLE"
 
+    # Populate 'id' but leave original attrs alone
     def get_attribute_data(self, attrs):
         self.attrs = attrs
         extra = {}
-        if ID_ATTR_NAME in attrs:
-            extra = {"id": attrs[ID_ATTR_NAME]}
+        if ENTITY_ID_ATTR_NAME in attrs:
+            extra = {"id": attrs[ENTITY_ID_ATTR_NAME]}
         return dict(attrs, **extra)
 
-    # This is a hack that allows us to store <a> tags without children
-    # If it has broken due to upgrade, you have to refactor how modelchoosers
-    # stores stuff and possibly do a data migration.  My prayers are with you.
+    # Put the inner text into the label attr.
     def handle_endtag(self, name, state, contentstate):
         label = self.attrs.get("label", None)
         if label:
@@ -38,62 +43,71 @@ class FromDBHandler(InlineEntityElementHandler):
 
 
 def default_expand_attrs(attrs):
-    href = attrs.pop("url")
-    attrs.pop("linktype")
-    tag = DOM.create_element("a", dict(attrs, **{"href": href}))
+    tag = DOM.create_element(ENTITY_TAG_NAME, attrs)
     return str(DOM.render(tag))
 
 
-def make_rewriter(t, expander):
-    class ModelLinkHandler(LinkHandler):
-        identifier = t
+class EntityLinkRewriter:
+    """Everything is entity and entity_type now.  also, this comment should say something better"""
+    A_TAG_AND_CHILDREN = re.compile(r"<entity(\b[^>]*)>[^<]*</entity>")
 
-        @classmethod
-        def expand_db_attributes(cls, attrs):
-            elt = DOM.render(expander(attrs))
-            tag_spl = elt.rsplit("><", 1)
-            opening_tag = tag_spl[0]
-            if len(tag_spl) > 1:
-                opening_tag += ">"
-            return opening_tag
+    def __init__(self):
+        self.expanders = {}
 
-    return ModelLinkHandler
+    def add_type(self, t, expander):
+        self.expanders[t] = expander
+
+    def replace_tag(self, match):
+        attrs = extract_attrs(match.group(1))
+        entity_type = attrs.get(ENTITY_TYPE_ATTR_NAME, None)
+        if not entity_type:
+            return match.string
+        expander = self.expanders.get(entity_type, None)
+        if not expander:
+            return match.string
+        return DOM.render(expander(attrs))
+
+    def __call__(self, html):
+        return self.A_TAG_AND_CHILDREN.sub(self.replace_tag, html)
+
+
+entity_rewriter = EntityLinkRewriter()
 
 
 def to_database_format(t):
     def inner(props):
-        children = props.pop("children")
+        children = props.pop("children", [])
 
-        props["linktype"] = t
+        props[ENTITY_TYPE_ATTR_NAME] = t
         if "id" in props:
-            props[ID_ATTR_NAME] = str(props["id"])
+            props[ENTITY_ID_ATTR_NAME] = str(props["id"])
 
         if props.get("label", None):
             children = []
 
-        return DOM.create_element("a", props, children)
+        return DOM.create_element(ENTITY_TAG_NAME, props, children)
     return inner
 
 
 def register_entity(features, chooser, name, draftail_type, prefix):
-        feature = draftail_features.EntityFeature(chooser)
-        features.register_editor_plugin("draftail", name, feature)
+    feature = draftail_features.EntityFeature(chooser)
+    features.register_editor_plugin("draftail", name, feature)
 
-        # This has to be lower because html attr names get lowered and
-        # the DOM selector has to match.  The type in the actual handler
-        # doesn't get lowered because it's the real type draftail is expecting.
-        t = prefix + draftail_type.lower()
+    # This has to be lower because html attr names get lowered and
+    # the DOM selector has to match.  The type in the actual handler
+    # doesn't get lowered because it's the real type draftail is expecting.
+    t = prefix + draftail_type.lower()
 
-        rule = {
-            "from_database_format": {"a[linktype={}]".format(t): FromDBHandler(draftail_type)},
-            "to_database_format": {"entity_decorators": {draftail_type: to_database_format(t)}},
-        }
+    rule = {
+        "from_database_format": {"{}[{}={}]".format(ENTITY_TAG_NAME, ENTITY_TYPE_ATTR_NAME, t): FromDBHandler(draftail_type)},
+        "to_database_format": {"entity_decorators": {draftail_type: to_database_format(t)}},
+    }
 
-        features.register_converter_rule("contentstate", name, rule)
+    features.register_converter_rule("contentstate", name, rule)
 
-        expander_path = getattr(settings, "DRAFT_EXPORTER_ENTITY_DECORATORS", {}).get(draftail_type, None)
-        expander = default_expand_attrs
-        if expander_path:
-            expander = import_string(expander_path)
+    expander_path = getattr(settings, "DRAFT_EXPORTER_ENTITY_DECORATORS", {}).get(draftail_type, None)
+    expander = default_expand_attrs
+    if expander_path:
+        expander = import_string(expander_path)
 
-        features.register_link_type(make_rewriter(t, expander))
+    entity_rewriter.add_type(t, expander)
