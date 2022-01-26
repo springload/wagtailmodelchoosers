@@ -58,6 +58,10 @@ class ModelView(ListModelMixin, GenericViewSet):
                 kwargs[param_name] = value
                 queryset = queryset.filter(**kwargs)
 
+        pk = self.request.query_params.get("id", None)
+        if pk:
+            queryset = queryset.filter(pk=pk)
+
         return queryset
 
     def get_queryset(self):

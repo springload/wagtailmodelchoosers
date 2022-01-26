@@ -6,7 +6,16 @@ class ModelChooser extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {initialValue: null};
+
     this.updateInputValue = this.updateInputValue.bind(this);
+
+    const url = props.options.endpoint + "?id=" + props.input.value;
+    fetch(url, { credentials: 'same-origin' })
+    .then(res => res.json())
+    .then((json) => {
+      this.setState({initialValue: json.results[0]});
+    });
   }
 
   updateInputValue(item) {
@@ -33,11 +42,13 @@ class ModelChooser extends React.Component {
   }
 
   render() {
+    if (this.state.initialValue == null) return "";
+
     const { options, input } = this.props;
 
     return (
       <BaseChooser
-        initialValue={input.value}
+        initialValue={this.state.initialValue}
         updateInputValue={this.updateInputValue}
         {...options}
       />
