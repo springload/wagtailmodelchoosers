@@ -40,7 +40,7 @@ def default_expand_attrs(attrs):
 
 class EntityLinkRewriter:
     """Everything is entity and entity_type now.  also, this comment should say something better"""
-    A_TAG_AND_CHILDREN = re.compile(r"<entity(\b[^>]*)>[^<]*</entity>")
+    A_TAG_AND_CHILDREN = re.compile(r"<entity(\b[^>]*)>([^<]*)</entity>")
 
     def __init__(self):
         self.expanders = {}
@@ -50,6 +50,8 @@ class EntityLinkRewriter:
 
     def replace_tag(self, match):
         attrs = extract_attrs(match.group(1))
+        attrs["children"] = match.group(2)
+
         entity_type = attrs.get(ENTITY_TYPE_ATTR_NAME, None)
         if not entity_type:
             return match.string
