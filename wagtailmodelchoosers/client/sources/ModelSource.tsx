@@ -34,6 +34,7 @@ class ModelSource extends React.Component<Props, State> {
             entityType: {
                 content_type,
                 display = "title",
+                selection_mode: selectionMode = false,
                 pk_name: pkName = "uuid",
                 type,
                 fields_to_save: fieldsToSave = [],
@@ -41,12 +42,11 @@ class ModelSource extends React.Component<Props, State> {
         } = this.props as Props;
 
         let label: string;
-        const displayIsSelection = display === "__selection__";
 
         const currentContent = editorState.getCurrentContent();
         const selectionState = editorState.getSelection();
 
-        if (displayIsSelection) {
+        if (selectionMode) {
             // If display is selection, get label for the new entity from selected text
             // TODO: What if no text is selected?
             const anchorKey = selectionState.getAnchorKey();
@@ -85,7 +85,7 @@ class ModelSource extends React.Component<Props, State> {
         };
         console.log("nextData", nextData);
 
-        const entityMutability = displayIsSelection ? "MUTABLE" : "IMMUTABLE";
+        const entityMutability = selectionMode ? "MUTABLE" : "IMMUTABLE";
         const entity = currentContent.createEntity(
             type,
             entityMutability,
