@@ -31,6 +31,7 @@ class BaseModelChooserPanel(BaseChooserPanel):
                 page_size=cls.page_size,
                 pk_name=cls.pk_name,
                 translations=cls.translations,
+                take_value=True,
             )
         }
 
@@ -96,6 +97,7 @@ class BaseRemoteModelChooserPanel(BaseChooserPanel):
                 fields_to_save=cls.fields_to_save,
                 pk_name=cls.pk_name,
                 translations=cls.translations,
+                take_value=True,
             )
         }
 

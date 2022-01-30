@@ -25,6 +25,7 @@ class ModelChooserWidget(WidgetWithScript, widgets.Input):
         self.page_size = kwargs.pop("page_size", None)
         self.pk_name = kwargs.pop("pk_name", "uuid")
         self.translations = kwargs.pop("translations", [])
+        self.take_value = kwargs.pop("take_value", False)
 
         super(ModelChooserWidget, self).__init__(**kwargs)
 
@@ -88,7 +89,7 @@ class ModelChooserWidget(WidgetWithScript, widgets.Input):
                 return str(value.pk)
             else:
                 return value.pk
-        return ""
+        return value
 
     def get_js_init_data(self, id_, name, value):
         if not isinstance(value, self.target_model):
@@ -129,12 +130,14 @@ class ModelChooserWidget(WidgetWithScript, widgets.Input):
         if not isinstance(value, self.target_model):
             value = self.get_instance(value)
 
+        if not self.take_value:
+            value = "loading"
+
         context = {
             "widget": self,
             "attrs": attrs,
             "name": name,
             "value": self.get_internal_value(value),
-            "instance": value,
         }
 
         return render_to_string(self.template_name, context)
@@ -156,6 +159,7 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
         self.fields_to_save = kwargs.pop("fields_to_save", None)
         self.pk_name = kwargs.pop("pk_name", "uuid")
         self.translations = kwargs.pop("translations", [])
+        self.take_value = kwargs.pop("take_value", False)
 
         super(RemoteModelChooserWidget, self).__init__(**kwargs)
 
@@ -205,12 +209,16 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
         )
 
     def render_html(self, name, value, attrs):
+        if self.take_value:
+            value = self.get_internal_value(value)
+        else:
+            value = "loading"
+
         context = {
             "widget": self,
             "attrs": attrs,
             "name": name,
-            "value": self.get_internal_value(value),
-            "instance": value,
+            "value": value,
         }
 
         return render_to_string(self.template_name, context)
