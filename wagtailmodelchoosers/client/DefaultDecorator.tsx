@@ -15,8 +15,7 @@ const DefaultDecorator = (entityData: any, props: Props) => {
     const { id } = d;
 
     const prefixLabel = entityData.prefix_label || "";
-    const prefix = `#${id} ${prefixLabel} - `;
-    const decoratedText = entityData.decoratedText || "";
+    const prefix = entityData.skip_prefix ? "" : `#${id} ${prefixLabel} - `;
 
     return (
         <a className="TooltipEntity">
