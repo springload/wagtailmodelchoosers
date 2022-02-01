@@ -29,7 +29,12 @@ const modelChooserDraftailInit = (draftailOptions, modelChooserEntityTypes, cons
     window.draftail.registerPlugin(plugin);
   });
 
-  return new window.telepath.constructors[constructor](draftailOptions);
+  if (window.telepath && window.telepath.constructors[constructor]) {
+    return new window.telepath.constructors[constructor](draftailOptions);
+  }
 };
 
-window.telepath.register('modelChooserDraftailInit', modelChooserDraftailInit);
+window.modelChooserDraftailInit = modelChooserDraftailInit;
+if (window.telepath) {
+  window.telepath.register('modelChooserDraftailInit', modelChooserDraftailInit);
+}

@@ -6,8 +6,10 @@ from django.forms import Media, widgets
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from wagtail.utils.widgets import WidgetWithScript
-
+from wagtail.admin.rich_text.editors.draftail import DraftailRichTextArea
 from wagtailmodelchoosers.utils import first_non_empty
+from wagtail.admin.staticfiles import versioned_static
+from .utils import get_all_chooser_options
 
 
 class ModelChooserWidget(WidgetWithScript, widgets.Input):
@@ -222,3 +224,23 @@ class RemoteModelChooserWidget(WidgetWithScript, widgets.Input):
         }
 
         return render_to_string(self.template_name, context)
+
+
+class DraftailRichTextAreaWithModelChoosers(DraftailRichTextArea):
+    """ For top level rich text fields that can't use telepath """
+    template_name = 'wagtailmodelchoosers/draftail_rich_text_area.html'
+
+    @cached_property
+    def media(self):
+        js = "wagtailmodelchoosers/draftailmodelchoosers.js"
+        return super().media + Media(js=[versioned_static(js)])
+
+    def get_context(self, *args, **kwargs):
+        ctx = super().get_context(*args, **kwargs)
+
+        # Give it all draftail types to register
+        f = "draftail_type"
+        types = ([c[f] for c in get_all_chooser_options().values() if f in c])
+        ctx["modelChooserEntityTypes"] = json.dumps(types)
+
+        return ctx
