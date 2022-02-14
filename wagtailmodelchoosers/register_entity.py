@@ -1,5 +1,6 @@
 import re
 
+from html import unescape
 from django.conf import settings
 from django.utils.module_loading import import_string
 import wagtail.admin.rich_text.editors.draftail.features as draftail_features
@@ -61,7 +62,10 @@ class EntityLinkRewriter:
         return DOM.render(expander(attrs))
 
     def __call__(self, html):
-        return self.A_TAG_AND_CHILDREN.sub(self.replace_tag, html)
+        decorated_html = self.A_TAG_AND_CHILDREN.sub(self.replace_tag, html)
+        # Can't get draftjs_exporter to disable escaping and there's another layer
+        # of escaping further up the stack, so need to unescape here.
+        return unescape(decorated_html)
 
 
 entity_rewriter = EntityLinkRewriter()
