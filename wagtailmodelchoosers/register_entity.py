@@ -41,7 +41,7 @@ def default_expand_attrs(attrs):
 
 class EntityLinkRewriter:
     """Everything is entity and entity_type now.  also, this comment should say something better"""
-    A_TAG_AND_CHILDREN = re.compile(r"<entity(\b[^>]*)>([^<]*)</entity>")
+    A_TAG_AND_CHILDREN = re.compile(r"<entity(\b[^>]*)>(.+?)</entity>")
 
     def __init__(self):
         self.expanders = {}
@@ -63,6 +63,7 @@ class EntityLinkRewriter:
 
     def __call__(self, html):
         decorated_html = self.A_TAG_AND_CHILDREN.sub(self.replace_tag, html)
+
         # Can't get draftjs_exporter to disable escaping and there's another layer
         # of escaping further up the stack, so need to unescape here.
         return unescape(decorated_html)
