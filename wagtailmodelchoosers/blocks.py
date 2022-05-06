@@ -3,6 +3,7 @@ import json
 from django import forms
 from django.apps import apps
 from django.utils.functional import cached_property
+from django.core.exceptions import ValidationError
 from wagtail.core.blocks import ChooserBlock
 
 from wagtailmodelchoosers.utils import first_non_empty, flatten, get_chooser_options
@@ -172,6 +173,9 @@ class RemoteModelChooserBlock(ChooserBlock):
         return first_non_empty(value, self.display, default="")
 
     def clean(self, value):
+        if self._required and not value:
+            raise ValidationError("This field is required.")
+
         return value
 
     class Meta:
