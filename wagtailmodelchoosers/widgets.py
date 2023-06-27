@@ -91,7 +91,7 @@ class ModelChooserWidget(WidgetWithScript, widgets.Input):
                 return str(value.pk)
             else:
                 return value.pk
-        return value
+        return value or ""
 
     def get_js_init_data(self, id_, name, value):
         if not isinstance(value, self.target_model):
