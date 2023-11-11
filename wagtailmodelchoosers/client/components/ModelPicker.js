@@ -39,7 +39,6 @@ const propTypes = {
 };
 
 class ModelPicker extends React.Component {
-
   constructor(props) {
     super(props);
 

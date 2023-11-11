@@ -2,7 +2,7 @@
    :target: https://travis-ci.org/springload/wagtailmodelchoosers
 .. image:: https://img.shields.io/pypi/v/wagtailmodelchoosers.svg
    :target: https://pypi.python.org/pypi/wagtailmodelchoosers
-   
+
 wagtailmodelchoosers
 ====================
 
@@ -29,10 +29,10 @@ Usage
 
     from wagtail.wagtailcore import blocks
     from wagtailmodelchoosers.blocks import ModelChooserBlock
-    
+
     class CustomBlock(blocks.StructBlock):
         custom_model = ModelChooserBlock('custom_model')  # `chooser` can be a positional argument, the keyword is used here for clarity.
-       
+
 ``ModelChooserPanel`` takes the name of the field as first positional argument (like a regular Panel) and the name of the chooser configuration as second positional argument. Use other panel kwargs as usual.
 
 .. code:: python
@@ -40,10 +40,10 @@ Usage
     from django.db import models
     from wagtail.core.models import Page
     from wagtailmodelchoosers.edit_handlers import ModelChooserPanel
-    
+
     class CustomPage(Page):
         custom_model = models.ForeignKey('myapp.CustomModel')
-        
+
         panels = [
             ...
             ModelChooserPanel('custom_model', chooser='custom_model'),  # `chooser` can be a positional argument, the keyword is used here for clarity.
@@ -51,7 +51,21 @@ Usage
 
 To select a model from a remote API, respectively use ``RemoteModelChooserBlock`` and ``RemoteModelChooserPanel`` instead.
 
-If you have `WagtailDraftail <https://github.com/springload/wagtaildraftail>`_ installed, it will automatically register the ``ModelSource`` and ``RemoteModelSource`` to the JS. Refer to ``WagtailDraftail``'s `documentation <https://github.com/springload/wagtaildraftail#configuration>`_ to hook it up properly.
+If you want a chooser to be available in draftail, put a unique 'draftail_type' into its configuration dict in ``MODEL_CHOOSER_OPTIONS``, then add the chooser name to rich text features.  You can do the latter either by adding it explicitly in a feature list like this:
+
+.. code:: python
+
+    rich_text_block = RichTextBlock(features=["custom_model"])
+
+Or adding it to the list of default features for all rich text blocks like this:
+
+.. code:: python
+
+    @hooks.register("register_rich_text_features")
+    def register_rich_text_features(features):
+        features.default_features.append("custom_model")
+
+Note: It's easy to confuse draftail_type with the chooser's name.  See the Configuration section if you're not sure which is which.  The only place you need to put the draftail_type is in settings.  The value you put there gets passed into draftail as an entity type, so the blocks created by that modelchooser toolbar option have the block type equal to the draftail_type you declared.  This is useful if you're doing something custom with the contentstate.
 
 Configuration
 ~~~~~~~~~~~~~
@@ -63,7 +77,7 @@ The ModelChooser and RemoteModelChooser share a similar base configuration and o
 .. code:: python
 
     MODEL_CHOOSERS_OPTIONS = {
-        'navigation': {
+        'navigation': {                                              # The chooser name
             'label': 'Navigation',                                   # The label to use for buttons or modal title
             'display': 'name',                                       # The field to display when selecting an object
             'list_display': [                                        # The fields to display in the chooser
@@ -75,9 +89,10 @@ The ModelChooser and RemoteModelChooser share a similar base configuration and o
             'fields_to_save': ['id'] + RATE_CHOOSER_DISPLAY_FIELDS,  # ONLY FOR REMOTE: The remote objects fields to save to the DB. Leave empty to save the whole object.
             'remote_endpoint': 'http://...'                          # ONLY FOR REMOTE: The remote API endpoint.
             'pk_name': 'uuid',                                       # The primary key name of the model
+            'draftail_type': 'NAV',                                  # Only add this if you want the model available in draftail.  Must be unique and can't clash with any default wagtail types.
         }
     }
-    
+
 In addition, you can customise the mapping of the key of the API, see the configuration key names being used for the `query <https://github.com/springload/wagtailmodelchoosers/blob/c36bb877eef4ac4af6b221f0d7ff7416354754c7/wagtailmodelchoosers/utils.py#L107-L112>`_ and the `response <https://github.com/springload/wagtailmodelchoosers/blob/c36bb877eef4ac4af6b221f0d7ff7416354754c7/wagtailmodelchoosers/utils.py#L115-L123>`_.
 
 
@@ -118,4 +133,3 @@ Releases
 *  Back on master with the PR merged, use ``make publish`` (confirm, and enter your password).
 *  Finally, go to GitHub and create a release and a tag for the new version.
 *  Done!
-

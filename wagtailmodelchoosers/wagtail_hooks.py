@@ -1,45 +1,95 @@
+import wagtail.admin.rich_text.editors.draftail.features as draftail_features
 from django.conf.urls import url
-from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.templatetags.static import static
 from django.utils.html import format_html, format_html_join
-
-from wagtail.wagtailcore import hooks
+from draftjs_exporter.dom import DOM
+from wagtail.admin.rich_text.converters import html_to_contentstate
+from wagtail.admin.rich_text.editors.draftail import (
+    DraftailRichTextArea,
+    DraftailRichTextAreaAdapter,
+)
+from wagtail.core import hooks, telepath
+from wagtail.core.widget_adapters import WidgetAdapter
 
 from wagtailmodelchoosers.views import ModelView, RemoteResourceView
+from wagtailmodelchoosers.widgets import ModelChooserWidget, RemoteModelChooserWidget
+
+from .register_entity import register_entity
+from .utils import get_all_chooser_options
 
 
-@hooks.register('insert_editor_css')
+@hooks.register("insert_editor_css")
 def wagtailmodelchoosers_admin_css():
     return format_html(
         '<link rel="stylesheet" href="{}">',
-        static('wagtailmodelchoosers/wagtailmodelchoosers.css')
+        static("wagtailmodelchoosers/wagtailmodelchoosers.css"),
     )
 
 
-@hooks.register('insert_editor_js')
+@hooks.register("insert_editor_js")
 def wagtailmodelchoosers_admin_js():
     js_files = (
-        'wagtailmodelchoosers/wagtailmodelchoosers.js',
-        'wagtailmodelchoosers/polyfills.js',
+        "wagtailmodelchoosers/wagtailmodelchoosers.js",
+        "wagtailmodelchoosers/polyfills.js",
     )
     js_includes = format_html_join(
-        '\n',
+        "\n",
         '<script src="{}"></script>',
-        ((static(filename),) for filename in js_files)
+        ((static(filename),) for filename in js_files),
     )
     return js_includes
 
 
-@hooks.register('register_admin_urls')
+@hooks.register("register_admin_urls")
 def wagtailmodelchoosers_admin_urls():
     return [
         url(
-            r'^modelchoosers/api/v1/model/(?P<app_name>[\w-]+).(?P<model_name>\w+)',
-            ModelView.as_view({'get': 'list'}),
-            name='wagtailmodelchoosers_api_model'
+            r"^modelchoosers/api/v1/model/(?P<app_name>[\w-]+).(?P<model_name>\w+)",
+            ModelView.as_view({"get": "list"}),
+            name="wagtailmodelchoosers_api_model",
         ),
         url(
-            r'^modelchoosers/api/v1/remote_model/(?P<chooser>[\w-]+)',
-            RemoteResourceView.as_view({'get': 'list'}),
-            name='wagtailmodelchoosers_api_remote_model'
-        )
+            r"^modelchoosers/api/v1/remote_model/(?P<chooser>[\w-]+)",
+            RemoteResourceView.as_view({"get": "list"}),
+            name="wagtailmodelchoosers_api_remote_model",
+        ),
     ]
+
+
+@hooks.register("register_rich_text_features")
+def register_rich_text_features(features):
+    choosers = get_all_chooser_options()
+    for name, chooser in choosers.items():
+        draftail_type = chooser.get("draftail_type", None)
+        if not draftail_type:
+            continue
+
+        # If there's no content_type then it's a remote chooser, and
+        # content_type means the name of the chooser instead of the model.
+        if "content_type" not in chooser:
+            chooser["content_type"] = name
+
+        chooser["type"] = draftail_type
+        register_entity(features, chooser, name, draftail_type, "model_chooser_")
+
+
+class ModelChooserDraftailRichTextAreaAdapter(DraftailRichTextAreaAdapter):
+    js_constructor = "modelChooserDraftailInit"
+
+    class Media:
+        js = ["wagtailmodelchoosers/draftailmodelchoosers.js"]
+
+    def js_args(self, *args, **kwargs):
+        js_args = super().js_args(*args, **kwargs)
+
+        # Give it all draftail types to register
+        f = "draftail_type"
+        js_args.append([c[f] for c in get_all_chooser_options().values() if f in c])
+
+        # Upstream's JS constructor to call with options
+        js_args.append(super().js_constructor)
+
+        return js_args
+
+
+telepath.register(ModelChooserDraftailRichTextAreaAdapter(), DraftailRichTextArea)

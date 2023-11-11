@@ -7,25 +7,26 @@ from codecs import open
 from wagtailmodelchoosers import __version__
 
 try:
-    from setuptools import setup, find_packages
+    from setuptools import find_packages, setup
 except ImportError:
     from distutils.core import setup
 
 
 install_requires = [
-    'wagtail>=1.7,<2'  # Depends on Wagtail's Django and Django RestFramework depencencies
+    'wagtail>=2.0.2,<2.16',  # Depends on Wagtail's Django and Django RestFramework depencencies
+    'django-filter>=2.2.0,<2.5.0'
 ]
 
 # Testing dependencies
 testing_extras = [
     # Required for running the tests
-    'tox>=2.3.1,<2.4',
+    'tox==3.23.1',
 
     # For coverage and PEP8 linting
-    'coverage>=4.1.0,<4.2',
-    'flake8>=3.2.0,<3.3',
-    'flake8-colors>=0.1.6,<1',
-    'isort==4.2.5',
+    'coverage==5.5',
+    'flake8==3.9.2',
+    # 'flake8-colors>=0.1.9,<1',
+    'isort==5.8.0',
 ]
 
 # Documentation dependencies

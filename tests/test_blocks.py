@@ -1,13 +1,16 @@
 from __future__ import absolute_import, unicode_literals
 
-from django.test import TestCase, override_settings
-from wagtail.wagtailcore.models import Page
-
 from core.models import SimplePage
+from django.test import TestCase, override_settings
+from wagtail.core.models import Page
+
 from wagtailmodelchoosers import blocks, widgets
 
 TEST_MODEL_CHOOSERS_OPTIONS = {
     'core_page': {
+        'content_type': 'wagtailcore.Page',
+    },
+    'other_page': {
         'content_type': 'wagtailcore.Page',
     }
 }
